@@ -63,18 +63,20 @@ https://leetcode.com/problem-list/oizxjoit/
     };
     ```
     
-    ![0.png](resource/0.png)
+    ![image](https://github.com/user-attachments/assets/288b9510-4195-4bf3-991c-47a36a57f7b0)
+
     
 
 1. Consider the following code snippet. Assume that it works and was imported into a .html file
 with the proper button IDs.
     
-    ![1.png](resource/1.png)
+    ![image](https://github.com/user-attachments/assets/297091ff-d7ec-4111-85b3-0481554c1498)
+
     
     1. What is the console output when the user clicks on “Button 3” and why?
     2. How would we fix the issue before ES6? How do we fix it after ES6?
     
-2. Given the following UI and HTML code, implement the following features, while matching the styling ***as closely*** as possible.
+3. Given the following UI and HTML code, implement the following features, while matching the styling ***as closely*** as possible.
     1. By default, the London tab is selected and only its content is displayed.
     2. When the user clicks on a tab, it is the only one that becomes highlighted, and only the corresponding content will be displayed.
     3. Ex: The user clicks ‘Paris’, so only the ‘Paris’ content is displayed.
@@ -83,7 +85,8 @@ with the proper button IDs.
     
     *(hint2: [ele.classList.toggle](https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle)(’specific class you’d like to add’))* 
     
-    ![2.png](resource/2.png)
+    ![image](https://github.com/user-attachments/assets/43241c0a-c570-4c98-a952-cdb17b0b2a5b)
+
     
     ```html
         <div>
@@ -105,7 +108,7 @@ with the proper button IDs.
         </div>
     ```
     
-3. Longest Substring Without Repeating Characters (coding + algorithm)
+5. Longest Substring Without Repeating Characters (coding + algorithm)
     
     Given a string s, find the length of the longest substring without repeating characters.
     
