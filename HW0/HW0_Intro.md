@@ -32,9 +32,10 @@ https://leetcode.com/problem-list/oizxjoit/
 完成 [https://learngitbranching.js.org/](https://learngitbranching.js.org/) ⽹站上的Introduction Sequence 和 Push &
 Pull — Git Remotes练习，截图上传
 
-![0.png](resource/0.png)
+![image](https://github.com/user-attachments/assets/b2c88ed9-cd32-41bd-8c71-0b73e608a780)
 
-![1.png](resource/1.png)
+![image](https://github.com/user-attachments/assets/82c7be6a-5723-4c96-a7df-b28ecb0bf5f5)
+
 
 ### 4. 问答练习
 
