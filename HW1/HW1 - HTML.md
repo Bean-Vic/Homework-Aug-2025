@@ -46,4 +46,4 @@ Implement the following questionnaire with HTML. No CSS required
 - Users should be able to upload a file when clicking `Choose Files` button
 - The link for `Visit our Community Hub` can be [`https://example.com/`](https://example.com/)
 
-![0.png](resource/0.png)
+![image](https://github.com/user-attachments/assets/0268165a-6b03-4fab-8697-6ede0e321303)
