@@ -51,4 +51,4 @@ https://leetcode.com/problem-list/oizxjoit/
     > sample design: (for reference only, don’t necessarily need to be pixel perfect)
     > 
     
-    ![image.png](resource/image.png)
+   ![image](https://github.com/user-attachments/assets/7dd7158e-b28d-4897-aed5-28120a12d30d)
