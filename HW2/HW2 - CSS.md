@@ -43,7 +43,8 @@ https://leetcode.com/problem-list/oizxjoit/
     1. Flexbox `display:flex`
     2. Grid `display:grid`
 
-![0.png](resource/0.png)
+![image](https://github.com/user-attachments/assets/b6994427-c9ff-42f0-a429-69df3a7b42e4)
+
 
 2. Create a Name card. 
 
@@ -54,12 +55,14 @@ https://leetcode.com/problem-list/oizxjoit/
 - When hovering on the avatar, its size will be a little larger.
 - The avatar image can be found here - [https://i.pravatar.cc/80](https://i.pravatar.cc/80)
 
-![Screenshot 2025-05-15 at 17.10.02.png](resource/1.png)
+![image](https://github.com/user-attachments/assets/e1efd7e4-3a95-4e20-ae00-c604715c4427)
+
 
 - Implement responsive design so that elements switch to a vertical (column) layout.
     - hint - `@media screen and (max-width: 600px)`
 
-![Screenshot 2025-05-15 at 21.22.28.png](resource/2.png)
+![image](https://github.com/user-attachments/assets/f39db683-e85c-4e19-b8fa-db612d105da6)
+
 
 3. Build a simple “Profile Card” page with Tailwind
 
@@ -91,4 +94,4 @@ https://leetcode.com/problem-list/oizxjoit/
     ```
     
 
-![Screenshot 2025-05-15 at 21.31.35.png](resource/3.png)
+![image](https://github.com/user-attachments/assets/1c29d598-c190-49ea-82dc-e97191f9cec8)
