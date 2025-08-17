@@ -93,10 +93,14 @@ HW1/
 ## 如何创建Pull Request
 
 ### 1.为每次作业创建branch，比如`bean_x_hw_1`
-![image 1](https://github.com/user-attachments/assets/10e75add-b243-45b2-93e4-b12faba44a23)
-
+![image](https://github.com/user-attachments/assets/7185e552-b04d-4892-917e-edd7efebef69)
 ### 2.创建Pull Request
-![image 2](https://github.com/user-attachments/assets/bd8c87cd-0e0c-456c-aa72-94f8497928af)
+Step 1.
+![image](https://github.com/user-attachments/assets/8c818576-1796-49fe-ae55-d262ff1e6708)
+Step 2.
+![image](https://github.com/user-attachments/assets/ec1fc0e6-401d-4b5b-a7f0-7394326f306f)
+Step 3.
+![image](https://github.com/user-attachments/assets/1f4c1a9b-055f-486a-8c62-30949922e0ce)
 
 ---
 
