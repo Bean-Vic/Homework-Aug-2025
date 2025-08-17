@@ -8,5 +8,5 @@
 /dataSources.local.xml
 
 #qodo
-/.idea
+/.idea/*
 /.qodo
