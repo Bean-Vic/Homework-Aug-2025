@@ -42,9 +42,10 @@ matches as closely as possible.
     4. By default, when the user loads the page for the first time, there should be these 3 items in the table as shown below.
     5. Style the even rows with a darker background.
     
-    ![0.png](resource/0.png)
+    ![image](https://github.com/user-attachments/assets/e981c3a4-a47e-4c14-8393-5ee13276c329)
+
     
-2. Use HTML/CSS/JS to solve the following problems. Please follow best practices when you write the code so that it would be easily readable, maintainable, and eﬃcient.
+3. Use HTML/CSS/JS to solve the following problems. Please follow best practices when you write the code so that it would be easily readable, maintainable, and eﬃcient.
     1. [Part 1] Given a url **`https://jsonplaceholder.typicode.com/users`**, send a GET request to display the data on the page in a **table**. Errors should be handled properly.
     2. [Part 2] Create a text input box and a search button. When you input a user ID and click search, it should display that user’s information, posts, and todos all in the same page in a **list** with the format of  key: value. *(Hint: Promise.all() or Promise.allSettled())*
         - For example, when the user types 2, display the data from the following urls:
@@ -63,6 +64,5 @@ matches as closely as possible.
     
     Put the three parts on a single page, similar to the example below:
     
-    ![1.png](resource/1.png)
-    
     Sample web page
+   ![image](https://github.com/user-attachments/assets/124237ac-0247-4c2d-9edb-83743a274fc4)
