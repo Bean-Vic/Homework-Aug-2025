@@ -82,10 +82,7 @@ https://leetcode.com/problem-list/oizxjoit/
       <head>
         <meta charset="UTF-8" />
         <title>Tailwind Assignment</title>
-        <link
-          href="https://unpkg.com/tailwindcss@%5E1.0/dist/tailwind.min.css"
-          rel="stylesheet"
-        />
+        <script src="https://cdn.tailwindcss.com"></script>
       </head>
       <body class="bg-gray-100 min-h-screen">
         <!-- Put your code here -->
