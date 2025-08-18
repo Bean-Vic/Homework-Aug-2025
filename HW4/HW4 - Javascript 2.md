@@ -62,15 +62,14 @@ https://leetcode.com/problem-list/oizxjoit/
       ],
     };
     ```
-    
-    ![image](https://github.com/user-attachments/assets/288b9510-4195-4bf3-991c-47a36a57f7b0)
+    ![image](https://github.com/user-attachments/assets/297091ff-d7ec-4111-85b3-0481554c1498)
 
     
 
 1. Consider the following code snippet. Assume that it works and was imported into a .html file
 with the proper button IDs.
+    ![image](https://github.com/user-attachments/assets/43241c0a-c570-4c98-a952-cdb17b0b2a5b)
     
-    ![image](https://github.com/user-attachments/assets/297091ff-d7ec-4111-85b3-0481554c1498)
 
     
     1. What is the console output when the user clicks on “Button 3” and why?
@@ -85,8 +84,8 @@ with the proper button IDs.
     
     *(hint2: [ele.classList.toggle](https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle)(’specific class you’d like to add’))* 
     
-    ![image](https://github.com/user-attachments/assets/43241c0a-c570-4c98-a952-cdb17b0b2a5b)
-
+    
+    ![image](https://github.com/user-attachments/assets/288b9510-4195-4bf3-991c-47a36a57f7b0)
     
     ```html
         <div>
