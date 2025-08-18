@@ -48,10 +48,10 @@ const itemsObject = [
 - Given the array, implement a function for generating a new array which contains item quantity > 2 and price > 300 only.
 - Given the array, implement a function to calculate the total value of the items.
 
-1. `const string =
+2. `const string =
   " Perhaps The Easiest-to-understand Case For Reduce Is To Return The Sum Of All The Elements In An Array  ";`
 - Given the string, implement a function to remove all the non-alphabet characters and extra space in the string and convert the string to all lowercase.
-1.  
+3.  
 
 ```jsx
 const first = [
