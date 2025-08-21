@@ -1,4 +1,4 @@
-Git Interview Q&A (Short Answers)
+
 
 Q1. What is the difference between git fetch and git pull?
 
