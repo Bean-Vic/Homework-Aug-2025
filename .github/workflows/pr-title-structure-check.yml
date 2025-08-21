@@ -1,0 +1,130 @@
+name: PR Title & Folder Structure Check
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, ready_for_review]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  lint:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const title = pr.title ?? "";
+            const repo = context.repo;
+            const headSha = pr.head.sha;
+
+            const titleRe = /^HW(0|[1-9]|1[0-9]|20)\s*-\s*\S.*$/i;
+            const marker = '<!-- pr-hw-structure-lint -->';
+
+            async function upsertComment(lines) {
+              const body = [marker, ...lines].join('\n');
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: repo.owner, repo: repo.repo, issue_number: pr.number, per_page: 100,
+              });
+              const existing = comments.find(c => c.body?.includes(marker));
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  owner: repo.owner, repo: repo.repo, comment_id: existing.id, body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: repo.owner, repo: repo.repo, issue_number: pr.number, body,
+                });
+              }
+            }
+
+            async function cleanupComment() {
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: repo.owner, repo: repo.repo, issue_number: pr.number, per_page: 100,
+              });
+              const existing = comments.find(c => c.body?.includes(marker));
+              if (existing) {
+                await github.rest.issues.deleteComment({
+                  owner: repo.owner, repo: repo.repo,
+                  comment_id: existing.id,
+                });
+              }
+            }
+
+            function fail(lines) {
+              return (async () => {
+                await upsertComment(lines);
+                core.setFailed('PR title/folder structure check failed');
+              })();
+            }
+
+            // --- 标题校验 ---
+            if (!titleRe.test(title)) {
+              await fail([
+                `### 🚫 PR 标题格式错误`,
+                ``,
+                `你的标题：\`${title}\``,
+                ``,
+                `**要求格式**：\`HW{#} - {Name}\`（大小写不敏感）`,
+                `- \`#\` 必须是 **0..20** 的整数`,
+                `- 中间要有连字符 \`-\`（可以有空格）`,
+                `- {Name} 至少要有一个非空白字符`,
+                ``,
+                `**正确示例**：`,
+                `- \`HW0 - Bean\``,
+                `- \`HW3 - Zoey\``,
+                `- \`HW20 - Performance tuning\``,
+                ``,
+                `❌ 不合格示例：`,
+                `- \`hw3\` （缺少连字符和名字）`,
+                `- \`HW21 - test\` （数字超出范围）`,
+                `- \`HW3- \` （缺少名字部分）`,
+              ]);
+              return;
+            }
+
+            const num = Number(title.match(/HW(0|[1-9]|1[0-9]|20)/i)[1]);
+
+            // --- 读取文件列表 ---
+            const files = [];
+            for (let page = 1; ; page++) {
+              const { data } = await github.rest.pulls.listFiles({
+                owner: repo.owner, repo: repo.repo, pull_number: pr.number, per_page: 100, page,
+              });
+              files.push(...data);
+              if (data.length < 100) break;
+            }
+            if (files.length === 0) {
+              await fail([
+                `### 🚫 没有检测到任何文件改动`,
+                ``,
+                `请确保提交了位于 \`HW${num}/{NAME_FOLDER}/\` 下的作业文件，并且包含 \`note.md\`。`
+              ]);
+              return;
+            }
+
+            const activeFiles = files.filter(f => ['added','modified','renamed','copied','changed'].includes(f.status));
+            const pathStartRe = new RegExp(`^HW${num}/([^/]+)/`);
+            const folders = new Set();
+            let mismatchExample = null;
+
+            for (const f of activeFiles) {
+              const p = f.filename;
+              if (!p.startsWith(`HW${num}/`)) {
+                mismatchExample = p;
+                break;
+              }
+              const m = p.match(pathStartRe);
+              if (!m) {
+                mismatchExample = p;
+                break;
+              }
+              folders.add(m[1]);
+            }
+
+            if (mismatchExample) {
+              await fail([
+                `### 🚫 作业号
