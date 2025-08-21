@@ -9,35 +9,34 @@ permissions:
 
 jobs:
   check:
-    if: ${{ !github.event.pull_request.draft }}
+    if: ${{ !github.event.pull_request.draft }} # 草稿 PR 不校验；要校验就删掉这行
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v7
         with:
           script: |
-            const title = context.payload.pull_request.title || "";
-            // 大小写不敏感：^HW(0|[1-9]|1[0-9]|20)\s*-\s*\S.*$
-            const re = /^HW(0|[1-9]|1[0-9]|20)\s*-\s*\S.*$/i;
+            const title = context.payload.pull_request.title ?? "";
+            // 规则：HW{#} - {Name}；# ∈ [0,20]；连字符两侧可有空格；Name 至少含一个非空白字符
+            const re = /^HW(0|[1-9]|1[0-9]|20)\s*-\s*\S.*$/i; // i 表示大小写不敏感（允许 hw3）
             if (!re.test(title)) {
-              core.setFailed(
-                `Invalid PR title: "${title}"
-
-Required format:
-  HW{#} - {Name}
-
-Where:
-  # is an integer from 0 to 20 (inclusive)
-    '-' may have spaces around it
-    {Name} must contain at least one non-space character
-
-Examples:
-  HW0 - Bean
-  HW3 - Zoey
-  HW20 - Bean
-
-Not allowed:
-  HW21 - xxx        (out of range)
-  HW3-              (missing name)
-  HW03 - xxx        (leading zero)`
-  );
-  }
+              core.setFailed([
+                `Invalid PR title: "${title}"`,
+                ``,
+                `Required format:`,
+                `  HW{#} - {Name}`,
+                ``,
+                `Where:`,
+                `  # is an integer from 0 to 20 (inclusive)`,
+                `  '-' may have spaces around it`,
+                `  {Name} must contain at least one non-space character`,
+                ``,
+                `Examples:`,
+                `  HW0 - Bean`,
+                `  HW3 - Zoey`,
+                `  HW20 - Performance tuning`,
+                ``,
+                `Not allowed:`,
+                `  HW21 - xxx        (out of range)`,
+                `  HW3-              (missing name)`
+              ].join('\n'));
+            }
