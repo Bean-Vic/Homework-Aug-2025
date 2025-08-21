@@ -1,42 +1,111 @@
-name: PR Title Check (github-script)
+name: PR Title Check (comment + block)
 
 on:
   pull_request:
     types: [opened, edited, synchronize, ready_for_review]
 
 permissions:
-  pull-requests: read
+  pull-requests: write   # 需要写权限才能评论
+  contents: read
 
 jobs:
   check:
-    if: ${{ !github.event.pull_request.draft }} # 草稿 PR 不校验；要校验就删掉这行
+    if: ${{ !github.event.pull_request.draft }} # 草稿 PR 可跳过；要校验草稿就删掉这行
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v7
+        id: lint
         with:
           script: |
-            const title = context.payload.pull_request.title ?? "";
-            // 规则：HW{#} - {Name}；# ∈ [0,20]；连字符两侧可有空格；Name 至少含一个非空白字符
-            const re = /^HW(0|[1-9]|1[0-9]|20)\s*-\s*\S.*$/i; // i 表示大小写不敏感（允许 hw3）
+            const pr = context.payload.pull_request;
+            const title = pr.title ?? "";
+            // 规则：HW{#} - {Name}；# ∈ [0,20]；连字符两侧可有空格；Name 至少含一个非空白字符；大小写不敏感
+            const re = /^HW(0|[1-9]|1[0-9]|20)\s*-\s*\S.*$/i;
+            const marker = '<!-- pr-title-lint -->'; // 用于查找/更新同一条“粘性评论”
+
+            // Helper: upsert sticky comment
+            async function upsertComment(body) {
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                per_page: 100,
+              });
+              const existing = comments.find(c => c.body && c.body.includes(marker));
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existing.id,
+                  body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  body,
+                });
+              }
+            }
+
+            // Helper: cleanup old sticky comment on success
+            async function deleteStickyIfExists() {
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                per_page: 100,
+              });
+              const existing = comments.find(c => c.body && c.body.includes(marker));
+              if (existing) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existing.id,
+                });
+              }
+            }
+
             if (!re.test(title)) {
-              core.setFailed([
-                `Invalid PR title: "${title}"`,
+              const msg = [
+                marker,
+                `### 🚫 PR title check failed`,
                 ``,
-                `Required format:`,
-                `  HW{#} - {Name}`,
+                `**Your title:** \`${title}\``,
                 ``,
-                `Where:`,
-                `  # is an integer from 0 to 20 (inclusive)`,
-                `  '-' may have spaces around it`,
-                `  {Name} must contain at least one non-space character`,
+                `**Why it failed**`,
+                `- Must match: \`HW{#} - {Name}\``,
+                `- \`#\` must be an integer from **0** to **20** (inclusive)`,
+                `- Hyphen can have spaces around it`,
+                `- {Name} must contain at least one non-space character`,
                 ``,
-                `Examples:`,
-                `  HW0 - Bean`,
-                `  HW3 - Zoey`,
-                `  HW20 - Performance tuning`,
+                `**Correct examples**`,
+                `- \`HW0 - Bean\``,
+                `- \`HW3 - Zoey\``,
+                `- \`HW20 - Performance tuning\``,
                 ``,
-                `Not allowed:`,
-                `  HW21 - xxx        (out of range)`,
-                `  HW3-              (missing name)`
-              ].join('\n'));
+                `**Not allowed**`,
+                `- \`HW21 - xxx\` (out of range)`,
+                `- \`HW3-\` (missing name)`,
+                ``,
+                `> Fix the title and this check will pass automatically.`
+              ].join('\n');
+
+              await upsertComment(msg);
+
+              // 可选：改成“请求修改”的 PR Review（会在 UI 上更醒目）
+              // await github.rest.pulls.createReview({
+              //   owner: context.repo.owner,
+              //   repo: context.repo.repo,
+              //   pull_number: pr.number,
+              //   event: "REQUEST_CHANGES",
+              //   body: msg,
+              // });
+
+              core.setFailed("PR title does not match required pattern: HW{0..20} - {Name}");
+            } else {
+              // 通过时清理之前的失败提示评论
+              await deleteStickyIfExists();
+              core.info("PR title OK");
             }
