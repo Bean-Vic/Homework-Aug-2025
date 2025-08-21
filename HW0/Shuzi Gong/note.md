@@ -37,3 +37,25 @@ The .gitignore file itself is tracked by Git, so everyone using the repository i
 Prefer git revert to safely create a reverse commit; only use git reset --hard and force push to rewrite history on private branches
 
 6. Can you give me some common git commands?
+git init
+git clone <repo_url>
+git status
+git commit -m "说明信息"
+git add <file># 添加全部git add .
+git log
+git branch <branch_name>
+**切换分支 Switch Branch**
+git checkout <branch_name># 创建并切换git checkout -b <branch_name>
+git merge <branch_name>
+**删除分支 Delete Branch**
+git branch -d <branch_name>
+**添加远程仓库 Add Remote Repo**
+git remote add origin <url>
+查看远程仓库 View Remote
+git remote -v
+**推送代码 Push to Remote**
+git push origin <branch_name>
+**拉取更新 Pull from Remote**
+git pull origin <branch_name>
+
+回退提交 git reset --soft HEAD~1 或 git revert <commit_hash>
