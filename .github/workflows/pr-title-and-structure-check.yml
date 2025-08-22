@@ -68,4 +68,130 @@ jobs:
                 '',
                 '你的标题：`' + title + '`',
                 '',
-                '**要求格式**：`HW{#} - {Nam
+                '**要求格式**：`HW{#} - {Name}`（大小写不敏感）',
+                '- `#` 必须是 0..20 的整数',
+                '- 中间要有连字符 `-`（可以有空格）',
+                '- {Name} 至少一个非空白字符',
+                '',
+                '**正确示例**：',
+                '- `HW0 - Vincent`',
+                '- `HW3 - Zoey`',
+                '- `HW20 - Performance tuning`',
+                '',
+                '**不合格示例**：',
+                '- `hw3`（缺少连字符和名字）',
+                '- `HW21 - test`（数字超出范围）',
+                '- `HW3- `（缺少名字部分）',
+              ]);
+              return;
+            }
+
+            const num = Number((title.match(/HW(0|[1-9]|1[0-9]|20)/i) || [])[1]);
+
+            // --- 2) 读取 PR 文件列表 ---
+            const files = [];
+            for (let page = 1; ; page++) {
+              const { data } = await github.rest.pulls.listFiles({
+                owner: repo.owner, repo: repo.repo, pull_number: pr.number, per_page: 100, page,
+              });
+              files.push(...data);
+              if (data.length < 100) break;
+            }
+
+            if (files.length === 0) {
+              await fail([
+                '### 🚫 没有检测到任何文件改动',
+                '',
+                '请确保在 `HW' + num + '/{NAME_FOLDER}/` 下提交作业文件，并且包含 `note.md`。'
+              ]);
+              return;
+            }
+
+            // 只关注非删除改动（如需阻塞删除，把 "removed" 也加入）
+            const activeFiles = files.filter(f => ['added','modified','renamed','copied','changed'].indexOf(f.status) !== -1);
+
+            const pathStartRe = new RegExp('^HW' + num + '/([^/]+)/'); // 捕获 NAME_FOLDER
+            const folders = new Set();
+            let offending = null;
+            let wrongHwExample = null;
+
+            for (const f of activeFiles) {
+              const p = f.filename;
+
+              // a) 不能出现在其他 HW 目录
+              const otherHwMatch = p.match(/^HW(\d+)\//i);
+              if (otherHwMatch && Number(otherHwMatch[1]) !== num) {
+                wrongHwExample = p;
+                break;
+              }
+
+              // b) 必须在 HW{num}/{NAME_FOLDER}/ 之下
+              if (p.indexOf('HW' + num + '/') !== 0) {
+                offending = p; break;
+              }
+              const m = p.match(pathStartRe);
+              if (!m) { offending = p; break; }
+              folders.add(m[1]);
+            }
+
+            if (wrongHwExample) {
+              await fail([
+                '### 🚫 作业号不一致',
+                '',
+                '标题中的作业号：`HW' + num + '`',
+                '但检测到其他目录：`' + wrongHwExample + '`',
+                '',
+                '**要求：** 只能改动 `HW' + num + '/{NAME_FOLDER}/` 下的文件。',
+                '✅ 示例：`HW' + num + '/Vincent/note.md`',
+              ]);
+              return;
+            }
+
+            if (offending) {
+              await fail([
+                '### 🚫 变更路径不符合规范',
+                '',
+                '文件：`' + offending + '`',
+                '',
+                '**要求：** 所有改动文件必须位于 `HW' + num + '/{NAME_FOLDER}/` 目录下。',
+                '✅ 正确示例：`HW' + num + '/Vincent/note.md`、`HW' + num + '/Vincent/录音.mp4`',
+                '❌ 错误示例：`HW' + num + '/note.md`、`HW' + num + '/question.js`',
+              ]);
+              return;
+            }
+
+            if (folders.size !== 1) {
+              await fail([
+                '### 🚫 检测到多个 {NAME_FOLDER}',
+                '',
+                '当前检测到：`' + Array.from(folders).join('`, `') + '`',
+                '',
+                '**要求：** 每个 PR 只能提交一个作业文件夹。',
+              ]);
+              return;
+            }
+
+            const folder = Array.from(folders)[0];
+
+            // --- 3) 必须存在 note.md（检查 PR head 提交的文件树） ---
+            try {
+              await github.rest.repos.getContent({
+                owner: repo.owner,
+                repo: repo.repo,
+                path: 'HW' + num + '/' + folder + '/note.md',
+                ref: headSha,
+              });
+            } catch (err) {
+              await fail([
+                '### 🚫 缺少必需文件 note.md',
+                '',
+                '未检测到：`HW' + num + '/' + folder + '/note.md`（按当前 PR 头部提交）',
+                '',
+                '**要求：** 在你的作业文件夹中添加 `note.md`（区分大小写）。',
+              ]);
+              return;
+            }
+
+            // 通过
+            await cleanupComment();
+            core.info('✅ PR check passed: HW' + num + '/' + folder);
