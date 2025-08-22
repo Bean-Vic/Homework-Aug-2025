@@ -1,16 +1,16 @@
-name: PR Title & Folder Structure Check
+name: PR Title & Folder Structure Check (PR)
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, edited, synchronize, ready_for_review]
 
 permissions:
-  pull-requests: write
+  pull-requests: write   # 评论需要；fork PR 时即使写了也可能只有只读，代码已容错
   contents: read
 
 jobs:
   lint:
-    if: ${{ !github.event.pull_request.draft }}
+    if: ${{ !github.event.pull_request.draft }}  # 草稿要校验就删这一行
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR (title + folder + note.md)
@@ -23,54 +23,46 @@ jobs:
             const title = pr && pr.title ? pr.title : "";
             const headSha = pr && pr.head && pr.head.sha ? pr.head.sha : "";
 
-            // ---- helpers: sticky comment upsert/cleanup ----
+            // ---- helpers: sticky comment upsert/cleanup (带权限容错) ----
             const MARK = "<!-- pr-hw-structure-lint -->";
 
             async function upsert(bodyLines) {
               const body = [MARK].concat(bodyLines).join("\n");
               const commentsResp = await github.rest.issues.listComments({
-                owner: repo.owner,
-                repo: repo.repo,
-                issue_number: pr.number,
-                per_page: 100
+                owner: repo.owner, repo: repo.repo, issue_number: pr.number, per_page: 100
               });
               const existing = (commentsResp.data || []).find(c => c.body && c.body.indexOf(MARK) !== -1);
               if (existing) {
                 await github.rest.issues.updateComment({
-                  owner: repo.owner,
-                  repo: repo.repo,
-                  comment_id: existing.id,
-                  body
+                  owner: repo.owner, repo: repo.repo, comment_id: existing.id, body
                 });
               } else {
                 await github.rest.issues.createComment({
-                  owner: repo.owner,
-                  repo: repo.repo,
-                  issue_number: pr.number,
-                  body
+                  owner: repo.owner, repo: repo.repo, issue_number: pr.number, body
                 });
               }
             }
-
             async function cleanup() {
               const commentsResp = await github.rest.issues.listComments({
-                owner: repo.owner,
-                repo: repo.repo,
-                issue_number: pr.number,
-                per_page: 100
+                owner: repo.owner, repo: repo.repo, issue_number: pr.number, per_page: 100
               });
               const existing = (commentsResp.data || []).find(c => c.body && c.body.indexOf(MARK) !== -1);
               if (existing) {
                 await github.rest.issues.deleteComment({
-                  owner: repo.owner,
-                  repo: repo.repo,
-                  comment_id: existing.id
+                  owner: repo.owner, repo: repo.repo, comment_id: existing.id
                 });
               }
             }
-
+            async function safeUpsert(lines) {
+              try { await upsert(lines); }
+              catch (e) { core.warning("No permission to write PR comment; skipping. " + (e.message || e)); }
+            }
+            async function safeCleanup() {
+              try { await cleanup(); }
+              catch (e) { /* ignore */ }
+            }
             async function fail(lines) {
-              await upsert(lines);
+              await safeUpsert(lines);
               core.setFailed("PR title/folder structure check failed");
             }
 
@@ -102,33 +94,19 @@ jobs:
 
             const numMatch = title.match(/HW(0|[1-9]|1[0-9]|20)/i);
             const num = numMatch ? Number(numMatch[1]) : NaN;
-            if (!(num === 0 || (num >= 1 && num <= 20))) {
-              await fail([
-                "### 🚫 无法解析作业号",
-                "",
-                "标题：`" + title + "`",
-                "未能识别 `HW{0..20}`。"
-              ]);
-              return;
-            }
 
             // ---- 2) list PR files (paginate) ----
             const files = [];
             let page = 1;
             while (true) {
               const resp = await github.rest.pulls.listFiles({
-                owner: repo.owner,
-                repo: repo.repo,
-                pull_number: pr.number,
-                per_page: 100,
-                page
+                owner: repo.owner, repo: repo.repo, pull_number: pr.number, per_page: 100, page
               });
               const data = resp.data || [];
               for (const it of data) files.push(it);
               if (data.length < 100) break;
               page += 1;
             }
-
             if (files.length === 0) {
               await fail([
                 "### 🚫 没有检测到任何文件改动",
@@ -154,22 +132,13 @@ jobs:
             for (const f of active) {
               const p = f.filename || "";
 
-              // 若出现其它 HW 号目录，立即失败
+              // 其它作业号目录 → 失败
               const mOther = p.match(/^HW(\d+)\//i);
-              if (mOther && Number(mOther[1]) !== num) {
-                wrongHw = p;
-                break;
-              }
+              if (mOther && Number(mOther[1]) !== num) { wrongHw = p; break; }
 
-              if (p.indexOf("HW" + num + "/") !== 0) {
-                offending = p;
-                break;
-              }
+              if (p.indexOf("HW" + num + "/") !== 0) { offending = p; break; }
               const m = p.match(pathStartRe);
-              if (!m) {
-                offending = p;
-                break;
-              }
+              if (!m) { offending = p; break; }
               folders.add(m[1]);
             }
 
@@ -185,7 +154,6 @@ jobs:
               ]);
               return;
             }
-
             if (offending) {
               await fail([
                 "### 🚫 变更路径不符合规范",
@@ -198,7 +166,6 @@ jobs:
               ]);
               return;
             }
-
             if (folders.size !== 1) {
               await fail([
                 "### 🚫 检测到多个 {NAME_FOLDER}",
@@ -215,8 +182,7 @@ jobs:
             // ---- 4) note.md must exist at head SHA ----
             try {
               await github.rest.repos.getContent({
-                owner: repo.owner,
-                repo: repo.repo,
+                owner: repo.owner, repo: repo.repo,
                 path: "HW" + num + "/" + folder + "/note.md",
                 ref: headSha
               });
@@ -232,5 +198,5 @@ jobs:
             }
 
             // ---- success ----
-            await cleanup();
+            await safeCleanup();
             core.info("OK: HW" + num + "/" + folder);
