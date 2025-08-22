@@ -17,22 +17,22 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            const title = pr.title ?? "";
+            const title = pr.title || "";
             const repo = context.repo;
             const headSha = pr.head.sha;
 
-            // 标题规则：HW{0..20} - {Name}（大小写不敏感）
+            // 标题：HW{0..20} - {Name}（大小写不敏感）
             const titleRe = /^HW(0|[1-9]|1[0-9]|20)\s*-\s*\S.*$/i;
 
             // 固定锚点，避免刷屏
             const marker = '<!-- pr-hw-structure-lint -->';
 
             async function upsertComment(lines) {
-              const body = [marker, ...lines].join('\n');
+              const body = [marker].concat(lines).join('\n');
               const { data: comments } = await github.rest.issues.listComments({
                 owner: repo.owner, repo: repo.repo, issue_number: pr.number, per_page: 100,
               });
-              const existing = comments.find(c => c.body?.includes(marker));
+              const existing = comments.find(c => c.body && c.body.indexOf(marker) !== -1);
               if (existing) {
                 await github.rest.issues.updateComment({
                   owner: repo.owner, repo: repo.repo, comment_id: existing.id, body,
@@ -48,7 +48,7 @@ jobs:
               const { data: comments } = await github.rest.issues.listComments({
                 owner: repo.owner, repo: repo.repo, issue_number: pr.number, per_page: 100,
               });
-              const existing = comments.find(c => c.body?.includes(marker));
+              const existing = comments.find(c => c.body && c.body.indexOf(marker) !== -1);
               if (existing) {
                 await github.rest.issues.deleteComment({
                   owner: repo.owner, repo: repo.repo, comment_id: existing.id,
@@ -56,7 +56,6 @@ jobs:
               }
             }
 
-            // ✅ 改成普通 async，避免 IIFE 引起的括号/缩进问题
             async function fail(lines) {
               await upsertComment(lines);
               core.setFailed('PR title/folder structure check failed');
@@ -65,125 +64,8 @@ jobs:
             // --- 1) 标题校验 ---
             if (!titleRe.test(title)) {
               await fail([
-                `### 🚫 PR 标题格式错误`,
-                ``,
-                `你的标题：\`${title}\``,
-                ``,
-                `**要求格式**：\`HW{#} - {Name}\`（大小写不敏感）`,
-                `- \`#\` 必须是 **0..20** 的整数`,
-                `- 中间要有连字符 \`-\`（可以有空格）`,
-                `- {Name} 至少要有一个非空白字符`,
-                ``,
-                `**正确示例**：`,
-                `- \`HW0 - Vincent\``,
-                `- \`HW3 - Zoey\``,
-                `- \`HW20 - Performance tuning\``,
-                ``,
-                `**不合格示例**：`,
-                `- \`hw3\` （缺少连字符和名字）`,
-                `- \`HW21 - test\` （数字超出范围）`,
-                `- \`HW3- \` （缺少名字部分）`,
-              ]);
-              return;
-            }
-
-            const num = Number(title.match(/HW(0|[1-9]|1[0-9]|20)/i)[1]);
-
-            // --- 2) 读取 PR 文件列表 ---
-            const files = [];
-            for (let page = 1; ; page++) {
-              const { data } = await github.rest.pulls.listFiles({
-                owner: repo.owner, repo: repo.repo, pull_number: pr.number, per_page: 100, page,
-              });
-              files.push(...data);
-              if (data.length < 100) break;
-            }
-
-            if (files.length === 0) {
-              await fail([
-                `### 🚫 没有检测到任何文件改动`,
-                ``,
-                `请确保提交了位于 \`HW${num}/{NAME_FOLDER}/\` 下的作业文件，并且包含 \`note.md\`。`,
-              ]);
-              return;
-            }
-
-            // 只关注非删除改动（如需阻塞删除，把 'removed' 也加入）
-            const activeFiles = files.filter(f => ['added','modified','renamed','copied','changed'].includes(f.status));
-
-            const pathStartRe = new RegExp(`^HW${num}/([^/]+)/`); // 捕获 NAME_FOLDER
-            const folders = new Set();
-            let offending = null;
-            let wrongHwExample = null;
-
-            for (const f of activeFiles) {
-              const p = f.filename;
-
-              // a) 不能出现在其他 HW 目录
-              const otherHwMatch = p.match(/^HW(\d+)\//i);
-              if (otherHwMatch && Number(otherHwMatch[1]) !== num) {
-                wrongHwExample = p;
-                break;
-              }
-
-              // b) 必须在 HW{num}/{NAME_FOLDER}/ 之下
-              if (!p.startsWith(`HW${num}/`)) {
-                offending = p; break;
-              }
-              const m = p.match(pathStartRe);
-              if (!m) { offending = p; break; }
-              folders.add(m[1]);
-            }
-
-            if (wrongHwExample) {
-              await fail([
-                `### 🚫 作业号不一致`,
-                ``,
-                `标题中的作业号：\`HW${num}\``,
-                `但检测到其他目录：\`${wrongHwExample}\``,
-                ``,
-                `**要求：** 本次 PR 的改动只能出现在 \`HW${num}/{NAME_FOLDER}/\` 下。`,
-                `✅ 示例：\`HW${num}/Vincent/note.md\``,
-              ]);
-              return;
-            }
-
-            if (offending) {
-              await fail([
-                `### 🚫 变更路径不符合规范`,
-                ``,
-                `文件：\`${offending}\``,
-                ``,
-                `**要求：** 所有改动文件必须放在 \`HW${num}/{NAME_FOLDER}/\` 目录下。`,
-                `✅ 正确示例：\`HW${num}/Vincent/note.md\`、\`HW${num}/Vincent/录音.mp4\``,
-                `❌ 错误示例：\`HW${num}/note.md\`、\`HW${num}/question.js\``,
-              ]);
-              return;
-            }
-
-            if (folders.size !== 1) {
-              await fail([
-                `### 🚫 检测到多个 {NAME_FOLDER}`,
-                ``,
-                `当前检测到：\`${[...folders].join('`, `')}\``,
-                ``,
-                `**要求：** 每个 PR 只能提交一个作业文件夹。`,
-              ]);
-              return;
-            }
-
-            const folder = [...folders][0];
-
-            // --- 3) 必须存在 note.md（检查 PR head 提交的文件树） ---
-            try {
-              await github.rest.repos.getContent({
-                owner: repo.owner,
-                repo: repo.repo,
-                path: `HW${num}/${folder}/note.md`,
-                ref: headSha,
-              });
-            } catch (err) {
-              await fail([
-                `### 🚫 缺少必需文件 note.md`,
-                ``,
-                `未检测到：\`HW${num}/${f
+                '### 🚫 PR 标题格式错误',
+                '',
+                '你的标题：`' + title + '`',
+                '',
+                '**要求格式**：`HW{#} - {Nam
