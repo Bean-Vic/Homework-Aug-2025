@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Registration Form</title>
+    </head>
+    <body>
+        <h1>Registration Form</h1>
+
+        <form>
+            <!-- Name field -->
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br><br>
+
+            <!-- Email field -->
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email"><br><br>
+
+            <!-- Phone field -->
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone"><br><br>
+
+            <!-- Preferred Session Date -->
+            <label for="session-date">Preferred Session Date:</label>
+            <input type="date" id="session-date" name="session-date"><br><br>
+
+            <!-- T-shirt Size -->
+            <label for="tshirt-size">T-shirt Size:</label>
+            <select id="tshirt-size" name="tshirt-size">
+                <option value="">Select size</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="x-large">X-large</option>
+            </select><br><br>
+
+            <!-- Experience Level -->
+            <label for="experience">Experience Level:</label>
+            <select id="experience" name="experience">
+                <option value="">Select level</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select><br><br>
+
+            <!-- File Upload -->
+            <label for="file-upload">Choose Files:</label>
+            <input type="file" id="file-upload" name="file-upload"><br><br>
+
+            <!-- Submit Button -->
+            <input type="submit" value="Submit">
+        </form>
+
+        <br>
+        <!-- Community Hub Link -->
+        <a href="https://example.com/">Visit our Community Hub</a>
+    </body>
+</html>
