@@ -1,0 +1,59 @@
+/*按照顺序先整体页面，然后是头部，再是中间内容，最后是底部*/
+/* 整体页面 */
+body {
+  font-family: "Source Sans Pro";
+  font-size: 32px;
+  line-height: 1.5;
+  background: #fff;
+  color: #33333390;
+  margin: 0; /* 每次记得去掉一下默认页边距 */
+}
+/*页面整体容器，div里面所有内容排版，如果没有的话会填充整个也能宽度。*/
+.page {
+  max-width: 960px; /*整个宽度在这里*/
+  margin: 0;
+}
+
+/* header就普通默认竖直排列 */
+header {
+  background: #9acd32; /* 绿色 */
+  height: 110px; /* 高度 */
+  padding: 20px; /* 内边距 */
+  font-weight: bold; /* 粗体 */
+  display: flex; /* 横排 */
+}
+
+/* 中间内容：flex默认横向排列 */
+.main {
+  display: flex;
+  height: 380px;
+  margin: 0;
+  font-weight: bold;
+}
+/* 中间一大块：左边nav，左边占160 */
+nav {
+  width: 160px;
+  background: #f5f5d7;
+  padding: 20px;
+}
+/* 中间一大块：右边aside，右边占160 */
+aside {
+  width: 160px;
+  background: #f5f5d7;
+  padding: 20px;
+}
+/* 中间一大块：中间文章，中间占据剩余空间 */
+article {
+  flex: 1; /* 占据剩余空间 */
+  padding: 20px;
+  background: #fff;
+  border-left: 1px solid #eee;
+}
+
+/* footer就普通默认竖直排列 */
+footer {
+  background: #ffff00d2;
+  height: 60px;
+  padding: 20px;
+  font-weight: bold;
+}
