@@ -7,23 +7,19 @@
         <h1>Registration Form</h1>
         <form>
       <fieldset>
-<legend>Preferred contact method:</legend>
+        <legend>Preferred contact method:</legend>
+<!--  记住for 点击label可focus -->
             <label for="name" placeholder="Your full name">Name:</label>
             <input type="text" id="name" name="name"><br><br>
-
-            <!-- Email field -->
             <label for="email">Email:
             <input type="email" id="email" name="email"></label><br><br>
-
             <!-- Phone field -->
             <label for="phone">Phone:</label>
             <input type="tel" id="phone" name="phone"><br><br>
             
 <label for="age">Age:</label>
 <input id="age" name="age" placeholder="0" size="3"><br><br>
-
 <label for="age"> Gender:</label>
-
 <label> <input type="radio" name="gender" value="Female"> Female </label>
 <label> <input type="radio"  name="gender" value="Male"> Male </label>
 <label> <input type="radio"  name="gender" value="Other"> Other </label>
@@ -52,6 +48,8 @@
                 <option value="advanced">Advanced</option>
             </select><br><br>
             
+<label for="experience">Check all that apply:</label>
+            <br>  <br>
  <input type="checkbox" id="interest1" name="interests" value="programming">
     <label for="interest1">Programming</label><br>
     
@@ -63,13 +61,18 @@
     
     <input type="checkbox" id="interest4" name="interests" value="gaming">
     <label for="interest4">Gaming</label><br>
+
 </fieldset>
+<fieldset><legend>Preferred contact method:</legend>
+
+ <label for="why">Why are you interested in this workshop? </label><br>
+<textarea></textarea><br>
             <!-- File Upload -->
             <label for="file-upload">Choose Files:</label>
             <input type="file" id="file-upload" name="file-upload"><br><br>
 
             <!-- Submit Button -->
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit"></fieldset>
         </form>
 
         <br>
