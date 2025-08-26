@@ -25,7 +25,8 @@ It collects user input and sends it to the server, often through GET or POST req
     ```html
     <a href="http://example.com/sample_page/" rel="noreferrer nofollow">Link</a>
     ```
-    
+This is an anchor tag that contains a URL for redirecting to another page. The rel="noreferrer nofollow" attributes prevent the new opened page from manipulating the original page's JavaScript files and hide information about where the user came from.
+
 7. How do you serve your page in multiple languages?
 **Set the lang attribute**
 
@@ -34,8 +35,13 @@ Tags like <header>, <article>, <section> add meaning.
 They improve accessibility, SEO, and code readability.
 
 9. What frontend practices can improve a website’s SEO, and why do they matter?
-a **Use semantic HTML**
-b **Proper meta tags**
+Use semantic HTML tags → Helps search engines understand content hierarchy
+Mobile responsiveness → Google prioritizes mobile-friendly sites
+Alt text for images → Improves accessibility and image search indexing
+Meta tags (title, description, keywords) → Improves search engine ranking
+Structured data (JSON-LD, schema.org) → Helps create rich snippets (stars, product info, etc.)
+Clean URLs → Descriptive links rank better (/blog/html5-tutorial > /post?id=123)
+Avoid duplicate content → Use canonical tags
 
 </aside>
 
