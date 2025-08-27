@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="A simple HTML template" />
+        <meta name="keywords" content="HTML, template" /> 
+        <meta name="author" content="Yanzhi" />
+        <title>Registration Form</title>
+    </head>
+    <body>
+        <h1>Registration Form</h1>
+        <p>
+            <em>Note: Please submit this form at least 14 days before your chosen session.</em>
+        </p>
+        <form>
+            <fieldset>
+                <br/>
+                <legend>Personal Details</legend>
+                <label>Name: <input type="text" id="name" name="name" placeholder="Your name"></label>
+                <br/>
+                <br/>
+                <label>Address: <input type="text" id="address" name="address" placeholder="Street, City, State"></label>
+                <br/>
+                <br/>
+                <label>Email: <input type="email" id="email" name="email" placeholder="you@example.com"></label>
+                <br/>
+                <br/>
+                <label>Phone Number: <input type="tel" id="phone-number" name="phone-number" placeholder="123-456-7890"></label>
+                <br/>
+                <br/>
+                <label>Age: <input type="number" id="age" name="age" placeholder="0"></label>
+                <br/>
+                <br/>
+                <p>Gender: </p>
+                <label><input type="radio" name="gender" value="male"> Male</label><br/>
+                <label><input type="radio" name="gender" value="female"> Female</label><br/>
+                <label><input type="radio" name="gender" value="other"> Other</label><br/>
+            </fieldset>
+            <fieldset>
+                <legend>Workshop Preferences</legend>
+                <br/>
+                <label for="session-date">Preferred Session Date: <input type="date" id="session-date" name="session-date"></label>
+                <br/>
+                <br/>
+                <label for="size">T-shirt Size: </label>
+                <select name="size" id="size">
+                    <option value="">Select size</option>
+                    <option value="">Small</option>
+                    <option value="">Medium</option>
+                    <option value="">Large</option>
+                    <option value="">X-Large</option>
+                </select>
+                <br/>
+                <br/>
+                <label for="level">Experience Level: </label>
+                <select name="level" id="level">
+                    <option value="">Select level</option>
+                    <option value="">Beginner</option>
+                    <option value="">Intermediate</option>
+                    <option value="">Advanced</option>
+                </select>
+                <br/>
+                <br/>
+                <p>Check all that apply:</p>
+                <label><input type="checkbox" name="options" value="vegetarian"> Vegetarian</label><br>
+                <label><input type="checkbox" name="options" value="assistance"> Require special assistance</label><br/>
+                <label><input type="checkbox" name="options" value="experience"> Have previous workshop experience</label><br/>
+                <label><input type="checkbox" name="options" value="weekdays"> Available on weekdays</label><br/>
+                <label><input type="checkbox" name="options" value="weekends"> Available on weekends</label><br/>
+            </fieldset>
+            <fieldset>
+                <legend>Additional Information</legend>
+                <br/>
+                <label for="interest">Why are you interested in this workshop?</label><br/>
+                <textarea id="interest" name="interest" rows="5" cols="60" placeholder="Tell us in 50 words or more"></textarea>
+                <br/>
+                <br/>
+                <label for="skills">List any relevant skills or experience:</label><br/>
+                <textarea id="skills" name="skills" rows="5" cols="60" placeholder="e.g., woodworking, painting, coding"></textarea>
+                <br/>
+                <br/>
+                <label for="proof">Upload Proof of Residency & ID:</label>
+                <input type="file" id="proof" name="proof" multiple>
+                <br/>
+            </fieldset>
+            <h2>Available Workshop Sessions</h2>
+            <h3>June 2025 Workshop Schedule</h3>
+            <table border="1">
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Topic</th>
+                </tr>
+                <tr>
+                    <td>June 3, 2025</td>
+                    <td>10:00 AM - 1:00 PM</td>
+                    <td>Introduction to Pottery</td>
+                </tr>
+                <tr>
+                    <td>June 10, 2025</td>
+                    <td>2:00 PM - 5:00 PM</td>
+                    <td>Basic Woodworking</td>
+                </tr>
+                <tr>
+                    <td>June 17, 2025</td>
+                    <td>9:00 AM - 12:00 PM</td>
+                    <td>Watercolor Painting</td>
+                </tr>
+                <tr>
+                    <td>June 24, 2025</td>
+                    <td>1:00 PM - 4:00 PM</td>
+                    <td>Intro to Coding</td>
+                </tr>
+            </table>
+            <br/>
+            <a href="https://example.com/" target="_blank">Visit our Community Hub</a>
+            <br/>
+            <br/>
+            <input type="submit" value="Submit Registration">
+            <br/>
+            <br/>
+        </form>
+    </body>
+        
+</html>
