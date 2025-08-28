@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="A simple HTML template" />
+        <meta name="keywords" content="HTML, template" /> 
+        <meta name="author" content="Yanzhi" />
+        <title>Flexbox Layout</title>
+    <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: sans-serif; background:white; }
+    .page { width: 100%; margin: 40px auto; }
+    header, footer, nav, article, aside { padding: 20px; }
+    header { background: green; color: gray; font-size: 24px; font-weight: 700; }
+    footer { background: yellow; color: gray; font-size: 20px; font-weight: 700; }
+    nav, aside { background: beige; color: gray; }
+    article { background: white; color: gray; min-height: 420px; }
+    .middle {display: flex;}
+    nav   { width: 160px; }
+    aside { width: 160px; }
+    article {flex: 1; 
+    border-left: 1px solid white;
+    border-right: 1px solid white;}
+    </style>
+    </head>
+    <body>
+        <div class="page">
+            <header>Header</header>
+            <section class="middle">
+                <nav>Nav</nav>
+                <article>Article</article>
+                <aside>Aside</aside>
+            </section>
+            <footer>Footer</footer>
+        </div>
+    </body>
+</html>

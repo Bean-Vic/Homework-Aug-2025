@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="A simple HTML template" />
+        <meta name="keywords" content="HTML, template" /> 
+        <meta name="author" content="Yanzhi" />
+        <title>Name Card</title>
+        <style>
+            * { box-sizing: border-box; }
+            body {margin: 0;font-family: sans-serif;background:#f0f2f5;min-height: 100vh;
+                display: flex;align-items: center;justify-content: center;}
+            .card {background:white;border: 1px solid white;border-radius: 10px;
+                padding: 16px 18px;max-width: 520px;width: 100%; display: flex;
+                align-items: center; gap: 16px;}
+            .avatar {width: 50px; height: 50px;border-radius: 50%; display: inline-block;}
+            .avatar:hover {width: 64px;height: 64px;}
+            .info { flex: 1; }
+            .name {margin: 0;font-size: 18px;font-weight: 700;color:black;}
+            .title {margin: 2px 0 0 0;font-size: 14px;color: gray;}
+            .btn {display: inline-block;background:#007bff;color:white;border: none;
+                border-radius: 5px;padding: 10px 14px;font-size: 14px;}
+            .btn:hover {background: #0062cc;cursor: pointer;}
+            @media (max-width: 768px) {.card {flex-direction: column;align-items: center;text-align: center;}
+            .info { width: 100%; }}
+        </style>
+    </head>
+<body>
+    <div class="card">
+        <img class="avatar" src="https://i.pravatar.cc/80" alt="Avatar of Jane Doe" />
+        <div class="info">
+            <h3 class="name">Jane Doe</h3>
+            <p class="title">Front-end Engineer</p>
+        </div>
+        <button class="btn">Follow</button>
+    </div>
+</body>
+</html>
