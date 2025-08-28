@@ -11,10 +11,10 @@ var maxArea = function (height) {
   while (left < right) {
     let edge = Math.min(height[left], height[right]);
     let area = edge * (right - left);
-
+    
     maxA = Math.max(maxA, area);
 
-    if (height[left] > height[right]) {
+    if (height[left] < height[right]) {
       left++;
     } else {
       right--;
