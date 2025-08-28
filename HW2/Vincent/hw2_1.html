@@ -7,7 +7,6 @@
         <style>
             .layout-section {
                 border: 3px solid #2c3e50;
-                border-radius: 12px;
             }
 
             .layout-section + .layout-section {
@@ -20,9 +19,6 @@
                 font-size: 16px;
                 font-weight: 500;
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                text-transform: uppercase;
                 letter-spacing: 1px;
             }
 
@@ -68,6 +64,44 @@
             .flex-layout article {
                 flex: 1; /* Take up remaining space between nav and aside */
             }
+
+            /* GRID LAYOUT */
+            .grid-layout {
+                display: grid;
+                grid-template-areas:
+                    "header"
+                    "main-content"
+                    "footer";
+                grid-template-rows: auto 1fr auto;
+                height: 500px; /* Same height as flexbox layout */
+            }
+
+            .grid-layout header {
+                grid-area: header;
+            }
+
+            .grid-layout .main-content {
+                grid-area: main-content;
+                display: grid;
+                grid-template-areas: "nav article aside";
+                grid-template-columns: 150px 1fr 150px; /* Same widths as flexbox */
+            }
+
+            .grid-layout nav {
+                grid-area: nav;
+            }
+
+            .grid-layout article {
+                grid-area: article;
+            }
+
+            .grid-layout aside {
+                grid-area: aside;
+            }
+
+            .grid-layout footer {
+                grid-area: footer;
+            }
         </style>
     </head>
     <body>
@@ -81,7 +115,7 @@
                     <header>Header</header>
                     <main class="main-content">
                         <nav>Navigation</nav>
-                        <article>Article Content</article>
+                        <article>Article</article>
                         <aside>Sidebar</aside>
                     </main>
                     <footer>Footer</footer>
@@ -95,7 +129,7 @@
                     <header>Header</header>
                     <main class="main-content">
                         <nav>Navigation</nav>
-                        <article>Article Content</article>
+                        <article>Article</article>
                         <aside>Sidebar</aside>
                     </main>
                     <footer>Footer</footer>
