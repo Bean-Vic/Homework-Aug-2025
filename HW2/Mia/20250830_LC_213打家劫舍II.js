@@ -1,4 +1,4 @@
-/** 213. 打家劫舍 II
+/** 213. 打家劫舍 II 动态规划
  * @param {number[]} nums
  * @return {number}
  */
