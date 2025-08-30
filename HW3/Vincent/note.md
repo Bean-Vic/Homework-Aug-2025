@@ -6,7 +6,7 @@
 
 ## Question 2: Explain the difference between var, let, & const.
 
-**Answer:** 
+**Answer:**
 - **var**: Function-scoped, hoisted and initialized to undefined, allows re-declaration in the same scope; ignores block scope.
 - **let**: Block-scoped, hoisted but in the TDZ (temporal dead zone) until declaration; no re-declaration in same scope.
 - **const**: Like let but must be initialized and cannot be reassigned (note: the object it points to can still be mutated).
@@ -17,13 +17,13 @@
 
 ## Question 4: What is the difference between == and ===?
 
-**Answer:** 
+**Answer:**
 - **=== (strict equality)**: No type coercion; compares type + value.
 - **== (loose equality)**: Performs implicit type coercion before comparison; can be surprising.
 
 ## Question 5: What are some examples of falsy values in JS?
 
-**Answer:** The falsy values are: false, 0, -0, 0n, "" (empty string), null, undefined, NaN.
+**Answer:** The falsy values are: false, 0, -0, "" (empty string), null, undefined, NaN.
 
 ## Question 6: Explain hoisting in JavaScript.
 
@@ -41,7 +41,7 @@ With var, shadowing is function-scoped (blocks don't create scope). With let/con
 
 ## Question 8: What are 3 ways to declare functions? What is their syntax?
 
-**Answer:** 
+**Answer:**
 
 **1. Function Declaration:**
 ```js
@@ -73,25 +73,25 @@ setTimeout(() => console.log("done"), 1000);
 
 ## Question 10: What's the difference between primitive data types and reference data types in JS?
 
-**Answer:** 
+**Answer:**
 - **Primitives**: Stored as values. Assigning/copying creates a new independent value. Types: number, string, boolean, null, undefined, symbol, bigint.
 - **Reference types**: Objects/arrays/functions are stored as references. Assigning/copying the variable copies the reference (two variables point to the same object).
 
 ## Question 11: What's the difference between array for loop and forEach?
 
-**Answer:** 
+**Answer:**
 - **for loop**: Most control (break, continue, return from surrounding function); can be faster; flexible indices.
 - **forEach**: Cleaner iteration; cannot break/continue; ignores await in the callback (doesn't pause the outer function).
 
 ## Question 12: What's the difference between array map and forEach?
 
-**Answer:** 
+**Answer:**
 - **forEach**: Run a function once per element for side-effects (logging, mutating something external, updating DOM, etc.); returns undefined; can mutate original object.
 - **map**: Transforms each element and returns a new array of the same length; pure transformation.
 
 ## Question 13: What is the difference between array slice and splice?
 
-**Answer:** 
+**Answer:**
 - **slice(start, end?)**: Non-mutating; returns a shallow copy of a segment.
 - **splice(start, deleteCount, ...items)**: Mutates the original array by removing/replacing/inserting elements; returns the removed items.
 
