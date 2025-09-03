@@ -1,0 +1,103 @@
+<!DOCTYPE html> <!-- 声明 HTML5 文档类型 -->
+<html lang="en"> <!-- HTML 根元素，语言设为英文 -->
+<head>
+  <meta charset="UTF-8" /> <!-- 网页字符编码 UTF-8 -->
+  <title>Tabs — London / Paris / Tokyo</title> <!-- 网页标题 -->
+  <style>
+    /* 定义 CSS 变量（全局颜色配置） */
+    :root { --border:#cfcfcf; --tab-bg:#eee; --tab-active:#d6d6d6; --text:#222; }
+
+    /* 设置全局字体和文字颜色 */
+    body { font-family:sans-serif; color:var(--text); }
+
+    /* 外层 tabs 容器，限制最大宽度 720px，水平居中，上下外边距 24px，加边框 */
+    .tabs { max-width:720px; margin:24px auto; border:1px solid var(--border); }
+
+    /* tab 按钮行：横向排列，背景色和底边框 */
+    .tablist { display:flex; background:var(--tab-bg); border-bottom:1px solid var(--border); }
+
+    /* 每个按钮的样式 */
+    .tablist button {
+      appearance:none; /* 移除浏览器默认按钮样式 */
+      border:0;        /* 去掉按钮边框 */
+      background:transparent; /* 默认背景透明 */
+      padding:12px 16px;      /* 内边距 */
+      font-size:18px;         /* 字体大小 */
+      color:inherit;          /* 文字颜色继承父元素 */
+      cursor:pointer;         /* 鼠标变手型 */
+      border-right:1px solid var(--border); /* 按钮之间的分隔线 */
+    }
+
+    /* 最后一个按钮去掉右边框（避免多余竖线） */
+    .tablist button:last-child { border-right:0; }
+
+    /* 被选中的按钮样式：背景色加深，字体加粗 */
+    .tablist button.active { background:var(--tab-active); font-weight:600; }
+
+    /* 面板默认隐藏，内边距 20px，背景白色 */
+    .panel { display:none; padding:20px; background:#fff; }
+
+    /* 被选中的面板显示出来 */
+    .panel.active { display:block; }
+
+    /* 面板标题样式 */
+    .panel h2 { margin:0 0 8px; font-size:28px; }
+
+    /* 面板正文样式 */
+    .panel p { margin:0; font-size:18px; }
+  </style>
+</head>
+<body>
+  <div class="tabs"> <!-- 整个 tab 组件外层容器 -->
+    <!-- 按钮行 -->
+    <div class="tablist" id="tablist">
+      <!-- London 按钮，默认选中（有 active 类） -->
+      <button class="tab active" type="button" data-target="london">London</button>
+      <!-- Paris 按钮，未选中 -->
+      <button class="tab" type="button" data-target="paris">Paris</button>
+      <!-- Tokyo 按钮，未选中 -->
+      <button class="tab" type="button" data-target="tokyo">Tokyo</button>
+    </div>
+
+    <!-- 面板内容 -->
+    <!-- London 面板，默认显示（有 active 类） -->
+    <div class="panel active" id="london">
+      <h2>London</h2><p>London is the capital city of England.</p>
+    </div>
+    <!-- Paris 面板，初始隐藏 -->
+    <div class="panel" id="paris">
+      <h2>Paris</h2><p>Paris is the capital of France.</p>
+    </div>
+    <!-- Tokyo 面板，初始隐藏 -->
+    <div class="panel" id="tokyo">
+      <h2>Tokyo</h2><p>Tokyo is the capital of Japan.</p>
+    </div>
+  </div>
+
+  <script>
+    // 1. 获取按钮父容器
+    const tablist = document.getElementById("tablist");
+    // 2. 获取所有 tab 按钮，转换为数组方便操作
+    const tabs    = Array.from(tablist.querySelectorAll(".tab"));
+    // 3. 获取所有面板元素
+    const panels  = Array.from(document.querySelectorAll(".panel"));
+
+    // 4. 在按钮父容器上绑定点击事件（事件委托）
+    tablist.addEventListener("click", (e) => {
+      // 找到被点击的 .tab 按钮
+      const btn = e.target.closest(".tab");
+      if (!btn) return; // 如果点的不是按钮，忽略
+      if (btn.classList.contains("active")) return; // 如果点的是已选中的按钮，直接返回
+
+      // 5. 清空所有按钮和面板的 active 状态
+      tabs.forEach(t => t.classList.remove("active"));    // 移除按钮选中样式
+      panels.forEach(p => p.classList.remove("active"));  // 隐藏所有面板
+
+      // 6. 激活当前点击的按钮和对应的面板
+      btn.classList.add("active"); // 按钮加上 active 样式
+      const panel = document.getElementById(btn.dataset.target); // 找到 data-target 对应的面板
+      if (panel) panel.classList.add("active"); // 显示对应面板
+    });
+  </script>
+</body>
+</html>

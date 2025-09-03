@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dynamic Table</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid #000;
+        padding: 6px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="table-container"></div>
+    <!-- 表格将被插入到这个容器 -->
+
+    <script>
+      // 定义表格数据：表头 + 表格内容
+      const tableInfo = {
+        tableHeader: ["Student Name", "Age", "Phone", "Address"],
+        tableContent: [
+          {
+            "Student Name": "John",
+            Age: 19,
+            Phone: "455-983-0903",
+            Address: "123 Ave, San Francisco, CA, 94011",
+          },
+          {
+            "Student Name": "Alex",
+            Age: 21,
+            Phone: "455-983-0912",
+            Address: "456 Rd, San Francisco, CA, 94012",
+          },
+          {
+            "Student Name": "Josh",
+            Age: 22,
+            Phone: "455-345-0912",
+            Address: "789 Dr, Newark, CA, 94016",
+          },
+          {
+            "Student Name": "Matt",
+            Age: 23,
+            Phone: "321-345-0912",
+            Address: "223 Dr, Sunnyvale, CA, 94016",
+          },
+        ],
+      };
+
+      // 创建 <table> 元素
+      const table = document.createElement("table");
+
+      // --------- 构建表头 thead ---------
+      const thead = document.createElement("thead"); // 创建 thead
+      const headerRow = document.createElement("tr"); // 创建表头行
+      tableInfo.tableHeader.forEach((h) => {
+        // 遍历表头数组
+        const th = document.createElement("th"); // 为每个表头创建 <th>
+        th.textContent = h; // 设置表头文字
+        headerRow.appendChild(th); // 把 <th> 加到表头行
+      });
+      thead.appendChild(headerRow); // 把表头行加入 thead
+      table.appendChild(thead); // 把 thead 加到 table
+
+      // --------- 构建表体 tbody ---------
+      const tbody = document.createElement("tbody"); // 创建 tbody
+      tableInfo.tableContent.forEach((row) => {
+        // 遍历每一行数据对象
+        const tr = document.createElement("tr"); // 创建一行 <tr>
+        tableInfo.tableHeader.forEach((key) => {
+          // 按照表头顺序生成单元格
+          const td = document.createElement("td"); // 创建 <td>
+          td.textContent = row[key] || ""; // 设置单元格内容，若无值则空串
+          tr.appendChild(td); // 把 <td> 加到当前行
+        });
+        tbody.appendChild(tr); // 把一整行加入 tbody
+      });
+      table.appendChild(tbody); // 把 tbody 加到 table
+
+      // --------- 插入到页面 ---------
+      document
+        .getElementById("table-container") // 找到容器
+        .appendChild(table); // 把表格挂到容器里
+    </script>
+  </body>
+</html>
