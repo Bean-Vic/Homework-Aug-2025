@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <script>
+            function show(a,b) {
+                console.log(this);
+                console.log(a+b);
+            }
+            show(2,3);
+            const obj = {name:"object"};
+            show.call(obj, 2, 3);
+
+            const person = {
+                firstName: 'John',
+                lastName: 'Doe'
+            }
+            function greet(greeting, message) {
+                console.log(`${greeting} ${this.firstName}, ${this.lastName}`);
+            }
+            greet("Hi", "How are you");
+            greet.apply(person, ["Hi", "How are you"]);
+
+            function old_show(a,b){
+                console.log(this);
+                console.log(a+b);
+            }
+            const new_obj = {name:"new object"}
+            const newShow = old_show.bind(new_obj,2,3);
+            newShow();
+            old_show(2,3);
+        </script>
+    </body>
+</html>

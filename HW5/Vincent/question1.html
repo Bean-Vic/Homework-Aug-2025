@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Product Management</title>
+<style>
+  /* Table */
+  table {
+    border-collapse: collapse;
+  }
+  thead th {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  tbody td {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  tbody tr:nth-child(even) {
+    background: #f5f5f5;
+  }
+</style>
+</head>
+<body>
+  <div class="table-wrap">
+    <table id="productTable" aria-label="Products">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Product Category</th>
+          <th>Product Price</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="productBody">
+        <!-- rows injected by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="rule" />
+
+  <div class="section-title">Add Product</div>
+  <div class="add-row" id="addForm" role="form">
+    <div>
+      <label for="name">Product Name:</label>
+      <input id="name" type="text" placeholder="e.g. M&amp;M" autocomplete="off" />
+    </div>
+    <div>
+      <label for="category">Product Category:</label>
+      <input id="category" type="text" placeholder="e.g. Snacks" autocomplete="off" />
+    </div>
+    <div>
+      <label for="price">Product Price:</label>
+      <input id="price" class="price" type="text" placeholder="e.g
