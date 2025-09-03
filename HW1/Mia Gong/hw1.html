@@ -1,81 +1,145 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Registration Form</title>
-    </head>
-    <body>
-        <h1>Registration Form</h1>
-        <form>
+  <head>
+    <style>
+      table,
+      td,
+      th {
+        border: 1px solid;
+        padding: 10px;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+    </style>
+    <title>Registration Form</title>
+  </head>
+  <body>
+    <h1>Registration Form</h1>
+    <form>
       <fieldset>
         <legend>Preferred contact method:</legend>
-<!--  记住for 点击label可focus -->
-            <label for="name" placeholder="Your full name">Name:</label>
-            <input type="text" id="name" name="name"><br><br>
-            <label for="email">Email:
-            <input type="email" id="email" name="email"></label><br><br>
-            <!-- Phone field -->
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone"><br><br>
-            
-<label for="age">Age:</label>
-<input id="age" name="age" placeholder="0" size="3"><br><br>
-<label for="age"> Gender:</label>
-<label> <input type="radio" name="gender" value="Female"> Female </label>
-<label> <input type="radio"  name="gender" value="Male"> Male </label>
-<label> <input type="radio"  name="gender" value="Other"> Other </label>
+        <!--  记住for 点击label可focus -->
+        <label for="name" placeholder="Your full name">Name:</label>
+        <input type="text" id="name" name="name" /><br /><br />
+        <label for="email"
+          >Email: <input type="email" id="email" name="email" /></label
+        ><br /><br />
+        <!-- Phone field -->
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" /><br /><br />
 
-</fieldset>
-<fieldset>
-<legend>Preferred contact method:</legend>
-            <!-- Preferred Session Date -->
-            <label for="session-date">Preferred Session Date:</label>
-            <input type="date" id="session-date" name="session-date"><br><br>
-            <!-- T-shirt Size -->
-            <label for="tshirt-size">T-shirt Size:</label>
-            <select id="tshirt-size" name="tshirt-size">
-                <option value="">Select size</option>
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-                <option value="x-large">X-large</option>
-            </select><br><br>
-            <!-- Experience Level -->
-            <label for="experience">Experience Level:</label>
-            <select id="experience" name="experience">
-                <option value="">Select level</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-            </select><br><br>
-            
-<label for="experience">Check all that apply:</label>
-            <br>  <br>
- <input type="checkbox" id="interest1" name="interests" value="programming">
-    <label for="interest1">Programming</label><br>
-    
-    <input type="checkbox" id="interest2" name="interests" value="design">
-    <label for="interest2">Design</label><br>
-    
-    <input type="checkbox" id="interest3" name="interests" value="networking">
-    <label for="interest3">Networking</label><br>
-    
-    <input type="checkbox" id="interest4" name="interests" value="gaming">
-    <label for="interest4">Gaming</label><br>
+        <label for="age">Age:</label>
+        <input id="age" name="age" placeholder="0" size="3" /><br /><br />
+        <label for="age"> Gender:</label>
+        <label>
+          <input type="radio" name="gender" value="Female" /> Female
+        </label>
+        <label> <input type="radio" name="gender" value="Male" /> Male </label>
+        <label>
+          <input type="radio" name="gender" value="Other" /> Other
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Preferred contact method:</legend>
+        <!-- Preferred Session Date -->
+        <label for="session-date">Preferred Session Date:</label>
+        <input type="date" id="session-date" name="session-date" /><br /><br />
+        <!-- T-shirt Size -->
+        <label for="tshirt-size">T-shirt Size:</label>
+        <select id="tshirt-size" name="tshirt-size">
+          <option value="">Select size</option>
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+          <option value="x-large">X-large</option></select
+        ><br /><br />
+        <!-- Experience Level -->
+        <label for="experience">Experience Level:</label>
+        <select id="experience" name="experience">
+          <option value="">Select level</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option></select
+        ><br /><br />
 
-</fieldset>
-<fieldset><legend>Preferred contact method:</legend>
+        <label for="experience">Check all that apply:</label>
+        <br />
+        <br />
+        <input
+          type="checkbox"
+          id="interest1"
+          name="interests"
+          value="programming"
+        />
+        <label for="interest1">Programming</label><br />
 
- <label for="why">Why are you interested in this workshop? </label><br>
-<textarea></textarea><br>
-            <!-- File Upload -->
-            <label for="file-upload">Choose Files:</label>
-            <input type="file" id="file-upload" name="file-upload"><br><br>
+        <input type="checkbox" id="interest2" name="interests" value="design" />
+        <label for="interest2">Design</label><br />
 
-            <!-- Submit Button -->
-            <input type="submit" value="Submit"></fieldset>
-        </form>
+        <input
+          type="checkbox"
+          id="interest3"
+          name="interests"
+          value="networking"
+        />
+        <label for="interest3">Networking</label><br />
 
-        <br>
-        <a href="https://example.com/">Visit our Community Hub</a>
-    </body>
+        <input type="checkbox" id="interest4" name="interests" value="gaming" />
+        <label for="interest4">Gaming</label><br />
+      </fieldset>
+      <fieldset>
+        <legend>Preferred contact method:</legend>
+
+        <label for="why">Why are you interested in this workshop? </label><br />
+        <textarea></textarea><br />
+        <label for="why">List any relevant skill or experience: </label><br />
+        <textarea placeholder="e.g., woodworking"></textarea><br />
+        <!-- File Upload -->
+        <label for="file-upload">Choose Files:</label>
+        <input type="file" id="file-upload" name="file-upload" /><br /><br />
+      </fieldset>
+
+      <div class="w3-container">
+        <h2>Available Workshop Sessions</h2>
+        <p>June 2025:</p>
+
+        <table class="w3-table" style="border-collapse: collapse">
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Topic</th>
+          </tr>
+          <tr>
+            <td>June 3, 2025</td>
+
+            <td>10:00 a.m</td>
+            <td>Introduction to pottery</td>
+          </tr>
+          <tr>
+            <td>June 10, 2025</td>
+            <td>2:00 p.m</td>
+            <td>Woodworking</td>
+          </tr>
+          <tr>
+            <td>June 17, 2025</td>
+            <td>9:00 a.m</td>
+            <td>Painting</td>
+          </tr>
+          <tr>
+            <td>June 24, 2025</td>
+            <td>1:00 p.m</td>
+            <td>Coding</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Submit Button -->
+      <input type="submit" value="Submit Registration" />
+    </form>
+
+    <br />
+    <a href="https://example.com/">Visit our Community Hub</a>
+  </body>
 </html>
