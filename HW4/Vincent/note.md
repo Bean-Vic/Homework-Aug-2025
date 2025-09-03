@@ -37,7 +37,7 @@ The `addEventListener()` method is generally preferred as it allows multiple han
 - **Dynamic elements:** Automatically handles events for dynamically added elements
 - **Memory optimization:** Reduces memory usage and improves performance
 
-## 6. What is event propagation?
+## 6. What is event propagation? How many phases are there? In what order does it occur?
 
 **Answer:** Event propagation describes how events move through the DOM tree. It consists of three phases:
 
@@ -45,7 +45,7 @@ The `addEventListener()` method is generally preferred as it allows multiple han
 2. **Target phase:** Event reaches the target element
 3. **Bubbling phase:** Event travels back up from the target to the root
 
-## 7. Event bubbling vs capturing
+## 7. Explain event bubbling and event capturing
 
 **Answer:**
 - **Bubbling:** After the target event is triggered, the event bubbles up from the target element to its ancestors (child → parent → grandparent)
@@ -64,7 +64,7 @@ By default, event listeners are registered for the bubbling phase. You can speci
 - Avoids polluting the global scope
 - Creates a private scope for variables
 
-## 9. Use of preventDefault()
+## 9. What is the use of preventDefault method
 
 **Answer:** `preventDefault()` is a method that stops the default browser behavior for an event.
 
@@ -74,7 +74,7 @@ By default, event listeners are registered for the bubbling phase. You can speci
 - Preventing right-click context menu
 - Blocking keyboard shortcuts
 
-## 10. New ES6 features (examples)
+## 10. Can you name some of the new es6 features?
 
 **Answer:** ES6 introduced many powerful features:
 
