@@ -1,6 +1,6 @@
 # JavaScript DOM & ES6 Study Notes
 
-## 1. What is HTML?
+## 1. What is DOM?
 
 **Answer:** The Document Object Model (DOM) is a tree-like representation of HTML that allows JavaScript to access and manipulate the structure, style, and content of web pages dynamically.
 
