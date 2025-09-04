@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabs (London / Paris / Tokyo)</title>
+    <style>
+    .tabs { display: flex; border: 1px solid white; border-bottom: none; }
+    .tabs button {
+        padding: 10px 15px;
+        border: none;
+        border-right: 1px solid white;
+        background: white;
+        cursor: pointer;
+        font: 15px Arial, sans-serif;
+        }
+    .tabs button:last-child { border-right: none; }
+    .tabs button.active { background: gray; font-weight: bold; }
+
+    .panel {
+        border: 1px solid white;
+        padding: 15px;
+        font: 15px, sans-serif;
+    }
+
+    .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="tabs" id="tabs">
+        <button>London</button>
+        <button>Paris</button>
+        <button>Tokyo</button>
+    </div>
+    <div class="panel" id="panels">
+        <div>
+            <h2>London</h2>
+            <p>London is the capital city of England.</p>
+        </div>
+        <div class="hidden">
+            <h2>Paris</h2>
+            <p>Paris is the capital of France.</p>
+        </div>
+        <div class="hidden">
+            <h2>Tokyo</h2>
+            <p>Tokyo is the capital of Japan.</p>
+        </div>
+    </div>
+
+    <script>
+        var tabs = document.getElementById('tabs');
+        var buttons = tabs.querySelectorAll('button');
+        var panelsContainer = document.getElementById('panels');
+        var panels = panelsContainer.querySelectorAll('div');
+        function activate(index) {
+            for (var i=0; i<buttons.length; i++) {
+                if (i === index) {
+                    buttons[i].classList.add('active');
+                } 
+                else {
+                    buttons[i].classList.remove('active');
+                }
+            }
+            for (var j=0; j<panels.length; j++) {
+                if (j === index) {
+                    panels[j].classList.remove('hidden');
+                } 
+                else {
+                    panels[j].classList.add('hidden');
+                }
+            }
+        }
+    activate(0);
+    tabs.addEventListener('click', function (e) {
+        var target = e.target;
+        if (target.tagName.toLowerCase() !== 'button') return;
+        var idx=-1;
+        for (var i=0; i<buttons.length; i++) {
+            if (buttons[i]===target) {idx = i;break;}
+        }
+        if (idx!==-1) activate(idx);
+    });
+    </script>
+</body>
+</html>

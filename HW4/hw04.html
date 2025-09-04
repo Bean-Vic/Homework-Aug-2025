@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Table</title>
+</head>
+<body>
+    <h2>Student Table</h2>
+    <div id="table-root"></div>
+
+    <script>
+        const tableInfo = {
+        tableHeader: ["Student Name", "Age", "Phone", "Address"],
+        tableContent: [
+        {
+        "Student Name": "John",
+        Age: 19,
+        Phone: "455 - 983 - 0903",
+        Address: "123 Ave, San Francisco, CA, 94011",
+        },
+        {
+        "Student Name": "Alex",
+        Age: 21,
+        Phone: "455 - 983 - 0912",
+        Address: "456 Rd, San Francisco, CA, 94012",
+        },
+        {
+        "Student Name": "Josh",
+        Age: 22,
+        Phone: "455 - 345 - 0912",
+        Address: "789 Dr, Newark, CA, 94016",
+        },
+        {
+        "Student Name": "Matt",
+        Age: 23,
+        Phone: "321 - 345 - 0912",
+        Address: "223 Dr, Sunnyvale, CA, 94016",
+        },
+        ],
+    };
+    let table = document.createElement("table");
+    table.setAttribute("border", "1");
+    let thead = document.createElement("thead");
+    let trHead = document.createElement("tr");
+    for (let i = 0; i < tableInfo.tableHeader.length; i++) {
+        let th = document.createElement("th");  
+        th.textContent = tableInfo.tableHeader[i];
+        trHead.appendChild(th);
+    }
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+    let tbody = document.createElement("tbody");
+    for (let i = 0; i < tableInfo.tableContent.length; i++) {
+        let tr = document.createElement("tr");
+        let row = tableInfo.tableContent[i];
+
+        for (let j = 0; j < tableInfo.tableHeader.length; j++) {
+            let key = tableInfo.tableHeader[j];
+            let td = document.createElement("td");
+            td.textContent = row[key];
+            tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    let root = document.getElementById("table-root");
+    root.appendChild(table);
+    </script>
+</body>
+</html>
