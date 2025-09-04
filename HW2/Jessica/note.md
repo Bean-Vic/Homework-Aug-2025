@@ -2,7 +2,7 @@
 A stylesheet language used to style HTML documents (colors, fonts, layout, responsiveness, etc.).
 
 2. How do you link a CSS file?
-In the `<head>`: `<link rel="stylesheet" href="styles.css">`.
+link a CSS file to an HTML page by adding a link tag inside the head section and setting rel to ‘stylesheet’ and href to the path of the CSS file。
 
 3. Block vs inline vs inline-block
 - block: Takes the full width, starts on a new line, width/height can be set.  
@@ -10,8 +10,9 @@ In the `<head>`: `<link rel="stylesheet" href="styles.css">`.
 - inline-block: Does not break line but allows setting width/height and vertical margins.
 
 4. Pseudo-class vs pseudo-element  
-- Pseudo-class: Selects a state, e.g., `:hover`, `:focus`, `:nth-child()`.  
-- Pseudo-element: Selects part of an element or inserts content, e.g., `::before`, `::after`, `::first-line`.
+- Pseudo-class: style a state, e.g., `:hover`, `:focus`, `:nth-child()`.  
+- Pseudo-element: style part of an element or inserts content, e.g., `::before`, `::after`, `::first-line`.
+- pseudo-class uses single colon, pseudo-element uses double colons
 
 5. Child combinator vs descendant
 - Child `>`: Selects direct children (`ul > li`).  
