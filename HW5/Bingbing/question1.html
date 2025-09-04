@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #555;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9; /* 偶数行背景色 */
+    }
+    .form-section {
+      border-top: 2px solid #ccc;
+      padding-top: 15px;
+    }
+    .form-section label {
+      margin-right: 8px;
+    }
+    .form-section input {
+      margin-right: 15px;
+    }
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+      border: 1px solid #000; /* 黑色边框 */
+    }
+    button.delete-btn {
+      background-color: #f2f2f2;
+      border: 1px solid #000;   /* 黑色边框 */
+    }
+    button.delete-btn:hover {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Product Management</h2>
+
+  <table id="productTable">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Product Category</th>
+        <th>Product Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 默认初始数据 -->
+      <tr>
+        <td>M&amp;M</td>
+        <td>Snacks</td>
+        <td>$1.99</td>
+        <td><button class="delete-btn">Delete</button></td>
+      </tr>
+      <tr>
+        <td>Table</td>
+        <td>Furniture</td>
+        <td>$199</td>
+        <td><button class="delete-btn">Delete</button></td>
+      </tr>
+      <tr>
+        <td>Kale</td>
+        <td>Vegetables</td>
+        <td>$2.49</td>
+        <td><button class="delete-btn">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="form-section">
+    <h3>Add Product</h3>
+    <label>
+      Product Name:
+      <input type="text" id="nameInput">
+    </label>
+    <label>
+      Product Category:
+      <input type="text" id="categoryInput">
+    </label>
+    <label>
+      Product Price:
+      <input type="text" id="priceInput">
+    </label>
+    <button id="addBtn">Add New</button>
+  </div>
+
+  <script>
+    const tableBody = document.querySelector("#productTable tbody");
+    const inputs = {
+      name: document.getElementById("nameInput"),
+      category: document.getElementById("categoryInput"),
+      price: document.getElementById("priceInput"),
+    };
+    const addBtn = document.getElementById("addBtn");
+
+    // 工具函数：获取输入值
+    function getInputValues() {
+      return {
+        name: inputs.name.value.trim(),
+        category: inputs.category.value.trim(),
+        price: inputs.price.value.trim(),
+      };
+    }
+
+    // 工具函数：清空输入框
+    function clearInputs() {
+      Object.values(inputs).forEach(input => (input.value = ""));
+    }
+
+    // 工具函数：创建新行
+    function createRow({ name, category, price }) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${category}</td>
+        <td>$${price}</td>
+        <td><button class="delete-btn">Delete</button></td>
+      `;
+      return row;
+    }
+
+    // 添加新产品
+    addBtn.addEventListener("click", () => {
+      const { name, category, price } = getInputValues();
+
+      if (!name || !category || !price) {
+        alert("All fields are required!");
+        return;
+      }
+
+      tableBody.appendChild(createRow({ name, category, price }));
+      clearInputs();
+    });
+
+    // 删除逻辑（事件委托）
+    tableBody.addEventListener("click", e => {
+      if (e.target.matches(".delete-btn")) {
+        e.target.closest("tr").remove();
+      }
+    });
+  </script>
+
+</body>
+</html>
