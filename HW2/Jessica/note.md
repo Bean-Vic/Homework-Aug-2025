@@ -24,14 +24,21 @@ link a CSS file to an HTML page by adding a link tag inside the head section and
 (`opacity: 0` also hides but keeps interaction space.)
 
 7. Box Model 
-`margin → border → padding → content`.  
-Controlled by `box-sizing: content-box | border-box`.
+The CSS Box Model consists of content → padding → border → margin.
+box-sizing controls how width and height are calculated:
+
+content-box (default): size applies only to content, padding and border add extra space.
+
+border-box: size includes content, padding, and border—easier for consistent layouts.
+
+In practice, we usually set everything to border-box for predictable sizing.
 
 8. `!important` usage  
 Overrides normal specificity. Used in urgent fixes, user styles, or utility classes. Should be avoided for maintainability.
 
 9. What does `z-index` do?  
 Controls stacking order in the same stacking context. Works on positioned elements. New stacking contexts are created by properties like `transform`, `opacity < 1`.
+Elements with a higher z-index are displayed above those with a lower value.
 
 10.  Can padding & margin be negative?  
 - `padding`: Cannot be negative.  
@@ -53,12 +60,9 @@ Item properties: `flex`, `align-self`, `order`.
 14.  Parent width = 200px; child width = auto  
 Child width = 200px, margins default to `0`.  
 If margins are `auto`, they distribute equally → child centered.
+The child expands to fill the entire width of the parent
 
 15.  What is responsive web design? How to achieve?  
-Design that adapts to different screen sizes/devices. Achieved by:  
-`<meta name="viewport" content="width=device-width, initial-scale=1">`, Flex/Grid layouts, media queries, relative units (`%`, `rem`, `vw`), responsive images (`max-width: 100%`).
-
-
-<img width="863" height="535" alt="image" src="https://github.com/user-attachments/assets/e706cb5d-523e-4560-8a75-5c65497df6b3" />
+Responsive Web Design means creating websites that adapt to different screen sizes and devices. It’s achieved with the viewport meta tag, flexible layouts (Flex/Grid), media queries, relative units, and responsive images.
 
 
