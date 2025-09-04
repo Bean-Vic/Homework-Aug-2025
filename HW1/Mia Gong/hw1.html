@@ -28,11 +28,12 @@
         ><br /><br />
         <!-- Phone field -->
         <label for="phone">Phone:</label>
-        <input type="tel" id="phone" name="phone" /><br /><br />
-
+        <input type="number" id="phone" name="phone" /><br /><br />
+        <!-- Better to use type="number" instead of the default type="text" -->
         <label for="age">Age:</label>
         <input id="age" name="age" placeholder="0" size="3" /><br /><br />
-        <label for="age"> Gender:</label>
+
+        Gender:
         <label>
           <input type="radio" name="gender" value="Female" /> Female
         </label>
@@ -85,9 +86,9 @@
           value="networking"
         />
         <label for="interest3">Networking</label><br />
-
-        <input type="checkbox" id="interest4" name="interests" value="gaming" />
-        <label for="interest4">Gaming</label><br />
+        <!-- Better to use meaningful id here, eg "interest_design"。 -->
+        <input type="checkbox" id="gaming" name="interests" value="gaming" />
+        <label for="gaming">Gaming</label><br />
       </fieldset>
       <fieldset>
         <legend>Preferred contact method:</legend>
