@@ -1,6 +1,7 @@
 /**
  * @param {number[][]} edges
  * @return {number[]}
+ *
  */
 class UnionFind {
   constructor(n) {
@@ -50,6 +51,8 @@ var findRedundantConnection = function (edges) {
   // connections.find(v)
   // connections.union(v1, v2)
   for (const edge of edges) {
+    // We use a loop to traverse the edges array, resulting in
+    // O(n) iterations.
     let v1 = edge[0];
     let v2 = edge[1];
     console.log([v1, v2]);
@@ -60,3 +63,11 @@ var findRedundantConnection = function (edges) {
   }
   return [];
 };
+
+// The time complexity of the the Union and Find functions is
+// O(α(n))
+// , since both path compression and union find by rank are being used.
+// α(n)is almost constant time and grows very slowly with the input size,
+// so the time complexity of both these functions can be considered as constant time for practical purposes.
+// Therefore, the overall time complexity becomes O(n×α(n))
+// , which simplifies to O(n)
