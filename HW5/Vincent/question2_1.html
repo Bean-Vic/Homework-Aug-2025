@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Part 1 — Load Users</title>
+    <style>
+        :root {
+            --border: #d7d7d7;
+            --head: #eee;
+            --even: #f7f7f7;
+            --text: #222;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 18px 24px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .02);
+        }
+
+        .toolbar {
+            margin-bottom: 10px;
+        }
+
+        button {
+            font-size: 13px;
+            padding: 8px 12px;
+            border: 1px solid #bdbdbd;
+            background: #f5f5f5;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: default;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            background: var(--head);
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        tbody td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--even);
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #555;
+            min-height: 1em;
+        }
+
+        .status.error {
+            color: #b3261e;
+        }
+    </style>
+</head>
+<body>
+    <section class="card">
+        <h2>Part 1</h2>
+
+        <div class="toolbar">
+            <button id="loadBtn" type="button">Load Users</button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 80px">ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th style="width: 200px">City</th>
+            </tr>
+            </thead>
+            <tbody id="usersBody">
+            <!-- rows go here -->
+            </tbody>
+        </table>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <script>
+        const API_URL = 'https://jsonplaceholder.typicode.com/users';
+        const btn = document.getElementById('loadBtn');
+        const tbody = document.getElementById('usersBody');
+        const statusEl = document.getElementById('status');
+
+        function addCell(tr, text) {
+            const td = document.createElement('td');
+            td.textContent = text ?? '';
+            tr.appendChild(td);
+        }
+
+        function render(users) {
+            tbody.innerHTML = '';
+            users.forEach(u => {
+            const tr = document.createElement('tr');
+            addCell(tr, u.id);
+            addCell(tr, u.name);
+            addCell(tr, u.email);
+            addCell(tr, u.address?.city);
+            tbody.appendChild(tr);
+            });
+        }
+
+        async function loadUsers() {
+            statusEl.textContent = 'Loading…';
+            statusEl.classList.remove('error');
+            btn.disabled = true;
+            btn.textContent = 'Loading…';
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+            try {
+                const res = await fetch(API_URL, { signal: controller.signal });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error('Unexpected response');
+
+                render(data);
+                statusEl.textContent = `Loaded ${data.length} users.`;
+            } catch (err) {
+                statusEl.textContent = err.name === 'AbortError'
+                    ? 'Request timed out.'
+                    : `Failed to load users: ${err.message}`;
+                statusEl.classList.add('error');
+            } finally {
+                clearTimeout(timeoutId);
+                btn.disabled = false;
+                btn.textContent = 'Load Users';
+            }
+        }
+
+        btn.addEventListener('click', loadUsers);
+    </script>
+</body>
+</html>
