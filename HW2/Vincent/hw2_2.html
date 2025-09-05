@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Name Card</title>
+        <style>
+            body {
+                background-color: #f0f2f5;
+                font-family: sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            .container {
+                background-color: white;
+                border-radius: 12px;
+                padding: 30px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                max-width: 400px;
+                width: 100%;
+            }
+
+            .avatar {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .avatar:hover {
+                transform: scale(1.1);
+                cursor: pointer;
+            }
+
+            .name_container {
+                flex: 1;
+            }
+
+            .name {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+            }
+
+            .job_title {
+                font-size: 16px;
+                color: #666;
+                margin-bottom: 15px;
+            }
+
+            .follow-btn {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                white-space: nowrap;
+            }
+
+            .follow-btn:hover {
+                background-color: #0056b3;
+                cursor: pointer;
+            }
+
+            /* Responsive design - switch to vertical layout on smaller screens */
+            @media (max-width: 480px) {
+                .container {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 25px;
+                }
+
+                .name_container {
+                    margin-bottom: 10px;
+                }
+
+                .name {
+                    font-size: 22px;
+                }
+
+                .job_title {
+                    margin-bottom: 20px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <img src="https://i.pravatar.cc/80" alt="profile picture" class="avatar">
+            <div class="name_container">
+                <div class="name">
+                    Jane Doe
+                </div>
+                <div class="job_title">
+                    Front-end Engineer
+                </div>
+            </div>
+            <button class="follow-btn">Follow</button>
+        </div>
+    </body>
+</html>
