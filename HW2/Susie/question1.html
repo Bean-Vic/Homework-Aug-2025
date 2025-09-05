@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HW2 - Question 1</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100vh;
+      }
+      .header {
+        background-color: #a4c847;
+        height: 100px;
+        padding: 1rem;
+      }
+      .main {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        flex: 1;
+      }
+      .nav,
+      .aside {
+        background-color: #f5f5db;
+        padding: 1rem;
+      }
+      .article {
+        padding: 1rem;
+      }
+      .footer {
+        background-color: yellow;
+        height: 100px;
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">Header</header>
+    <main class="main">
+      <nav class="nav">Nav</nav>
+      <div class="article">Article</div>
+      <aside class="aside">Aside</aside>
+    </main>
+    <footer class="footer">Footer</footer>
+  </body>
+</html>
