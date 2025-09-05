@@ -7,6 +7,5 @@
 /dataSources/
 /dataSources.local.xml
 
-#qodo
-/.idea/*
-/.qodo
+.DS_Store
+**/.DS_Store
