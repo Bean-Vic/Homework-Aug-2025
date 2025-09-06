@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>HW05</title>
+    <style>
+        body { font-family:system-ui, sans-serif; padding: 24px; color:black; }
+        .card { border:1px solid white; border-radius:6px; padding:16px; margin:16px 0; }
+        .card h3 { margin-top:0; }
+        button { padding:6px 10px; border:1px solid gray; border-radius:4px; background:white; cursor:pointer; }
+        button:active { transform: translateY(1px); }
+        input {padding:6px 8px;border:1px solid gray; border-radius:4px;}
+        .muted {color:gray;}
+        .error {color:red;font-weight:500;}
+        table {width:100%; border-collapse:collapse;margin-top:10px; }
+        th, td {border:1px solid gray;text-align:left;padding:8px; }
+        th {background:white;}
+        tbody tr:nth-child(even) { background:white; }
+        .kv li { margin:2px 0; }
+        .section-label { font-weight:700; margin-top:12px; }
+        .status { margin-top:8px; }
+    </style>
+</head>
+<body>
+    <section class="card">
+        <h3>Part 1</h3>
+        <button id="loadUsersBtn">Load Users</button>
+        <div id="p1-status" class="status muted"></div>
+        <table aria-label="Users table">
+            <thead>
+                <tr>
+                    <th style="width:60px">ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th style="width:160px">City</th>
+                </tr>
+            </thead>
+            <tbody id="usersTbody"></tbody>
+        </table>
+    </section>
+    <section class="card">
+        <h3>Part 2</h3>
+        <input id="userIdInput" type="text" placeholder="Enter User ID" />
+        <button id="searchBtn">Search</button>
+        <div id="p2-status" class="status muted"></div>
+        <div class="section-label">User Info</div>
+        <ul id="userInfo" class="kv"></ul>
+        <div class="section-label">User Posts</div>
+        <ul id="userPosts" class="kv"></ul>
+        <div class="section-label">User Todos</div>
+        <ul id="userTodos" class="kv"></ul>
+    </section>
+    <section class="card">
+        <h3>Part 3</h3>
+        <button id="delayedBtn">Send Delayed Request</button>
+        <div id="p3-status" class="status muted"></div>
+    </section>
+
+    <script>
+        (function () {
+            const $ = function (sel) { return document.querySelector(sel); };
+            const el = function (tag, text) {
+                const node = document.createElement(tag);
+                if (text != null) node.textContent = text;
+                return node;
+                };
+        function kvLi(key, value) {
+            const li = el('li');
+            li.appendChild(el('strong', key + ': '));
+            li.appendChild(document.createTextNode(value));
+            return li;
+            }
+        async function getJSON(url) {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+            }
+        const loadUsersBtn = $('#loadUsersBtn');
+        const usersTbody = $('#usersTbody');
+        const p1Status = $('#p1-status');
+        async function loadUsers() {
+            usersTbody.innerHTML = '';
+            p1Status.textContent = 'Loading...';
+            try {
+                const users = await getJSON('https://jsonplaceholder.typicode.com/users');
+                users.forEach(function (u) {
+                    const tr = el('tr');
+                    tr.appendChild(el('td', String(u.id)));
+                    tr.appendChild(el('td', u.name));
+                    tr.appendChild(el('td', u.email));
+                    tr.appendChild(el('td', u.address && u.address.city ? u.address.city : ''));
+                    usersTbody.appendChild(tr);
+                });
+                p1Status.textContent = 'Loaded ' + users.length + ' users.';
+            } 
+            catch (err) {
+                p1Status.textContent = '';
+                p1Status.className = 'status error';
+                p1Status.textContent = 'Failed to load users. ' + err.message;
+                setTimeout(function(){ p1Status.className = 'status muted'; }, 0);
+            }
+        }
+        loadUsersBtn.addEventListener('click', loadUsers);
+        const searchBtn = $('#searchBtn');
+        const idInput = $('#userIdInput');
+        const userInfo = $('#userInfo');
+        const userPosts = $('#userPosts');
+        const userTodos = $('#userTodos');
+        const p2Status = $('#p2-status');
+        function clearP2() {
+            userInfo.innerHTML = '';
+            userPosts.innerHTML = '';
+            userTodos.innerHTML = '';
+            }
+        async function searchUser() {
+            const raw = idInput.value.trim();
+            clearP2();
+            p2Status.textContent = '';
+
+            if (!raw) {
+                p2Status.className = 'status error';
+                p2Status.textContent = 'Please enter a user ID.';
+                setTimeout(function(){ p2Status.className = 'status muted'; }, 0);
+                return;}
+        const id = Number(raw);
+        if (!Number.isFinite(id)) {
+            p2Status.className = 'status error';
+            p2Status.textContent = 'User ID must be a number.';
+            idInput.value = '';
+            setTimeout(function(){ p2Status.className = 'status muted'; }, 0);
+            return;
+            }
+        p2Status.textContent = 'Searching...';
+        const urls = ['https://jsonplaceholder.typicode.com/users/' + id,
+            'https://jsonplaceholder.typicode.com/posts?userId=' + id,
+            'https://jsonplaceholder.typicode.com/todos?userId=' + id];
+        try {
+            const results = await Promise.allSettled(urls.map(getJSON));
+            const userRes  = results[0];
+            const postsRes = results[1];
+            const todosRes = results[2];
+
+            if (userRes.status !== 'fulfilled' || !userRes.value || !userRes.value.id) {
+                p2Status.className = 'status error';
+                p2Status.textContent = 'User was not found. Please try another user ID';
+                idInput.value = '';
+                setTimeout(function(){ p2Status.className = 'status muted'; }, 0);
+            return;}
+
+            const u = userRes.value;
+            const infoPairs = [
+                ['id', u.id],
+                ['name', u.name],
+                ['username', u.username],
+                ['email', u.email],
+                ['phone', u.phone],
+                ['website', u.website],
+                ['company', u.company && u.company.name ? u.company.name : ''],
+                ['city', u.address && u.address.city ? u.address.city : '']];
+            infoPairs.forEach(function (pair) { userInfo.appendChild(kvLi(pair[0], String(pair[1]))); });
+            if (postsRes.status === 'fulfilled' && postsRes.value) {
+                postsRes.value.slice(0, 5).forEach(function (p, i) {
+                    userPosts.appendChild(kvLi('Post ' + (i + 1), p.title));
+                    });
+                if (postsRes.value.length > 5) userPosts.appendChild(kvLi('(+ more)', 'total ' + postsRes.value.length));
+            }
+            else {userPosts.appendChild(kvLi('Posts', 'Failed to load'));}
+            if (todosRes.status === 'fulfilled' && todosRes.value) {
+                todosRes.value.slice(0, 5).forEach(function (t, i) {
+                userTodos.appendChild(kvLi('Todo ' + (i + 1), t.title));
+                });
+                if (todosRes.value.length > 5) userTodos.appendChild(kvLi('(+ more)', 'total ' + todosRes.value.length));
+            }
+            else {userTodos.appendChild(kvLi('Todos', 'Failed to load'));}
+            p2Status.textContent = 'Done.';
+        } catch (err) {
+            p2Status.className = 'status error';
+            p2Status.textContent = 'Something went wrong: ' + err.message;
+            setTimeout(function(){ p2Status.className = 'status muted'; }, 0);
+            }
+        }
+        searchBtn.addEventListener('click', searchUser);
+        const delayedBtn = $('#delayedBtn');
+        const p3Status = $('#p3-status');
+        function makeDelayedRequest(defaultUrl) {
+            return async function delayedRequest(url) {
+                const target = url || defaultUrl;
+                p3Status.textContent = 'Waiting ...';
+                try {
+                    const data = await getJSON(target);
+                    await new Promise(function (resolve) { setTimeout(resolve, 2000); });
+                    console.log('Delayed data:', JSON.stringify(data, null, ' '));
+                    p3Status.textContent = 'Check console for the data';
+                } catch (e) {
+                    p3Status.className = 'status error';
+                    p3Status.textContent = 'Request failed: ' + e.message;
+                    setTimeout(function(){ p3Status.className = 'status muted'; }, 0);
+                    }
+                };
+            }
+
+        const delayedRequest = makeDelayedRequest('https://jsonplaceholder.typicode.com/users/1');
+        delayedBtn.addEventListener('click', function () { delayedRequest(); });
+    })();
+    </script>
+</body>
+</html>

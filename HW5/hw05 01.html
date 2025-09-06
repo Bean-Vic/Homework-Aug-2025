@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Management</title>
+    <style>
+        table {
+            width: 70%;
+            border-collapse: collapse;
+            margin-bottom: 15px;}
+        th, td {
+            border:1px solid gray;
+            padding:8px;
+            text-align:center;}
+        th {background-color:white;}
+        tr:nth-child(even) {background-color: white;}
+        form {margin-top:10px;}
+        label {margin-right: 10px;}
+    </style>
+</head>
+<body>
+    <h2>Product Management</h2>
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Product Category</th>
+                <th>Product Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="productBody">
+        </tbody>
+    </table>
+    <hr>
+
+    <h3>Add Product</h3>
+    <form id="productForm">
+        <label>
+            Product Name:<input type="text" id="name">
+        </label>
+        <label>
+            Product Category:<input type="text" id="category">
+        </label>
+        <label>
+            Product Price:<input type="text" id="price">
+        </label>
+        <button type="button" id="addBtn">Add New</button>
+    </form>
+
+    <script>
+        (function () {
+            let products=[{name:"M&M", category: "Snacks", price: "$1.99" },
+            {name:"Table", category: "Furniture", price: "$199" },
+            { name: "Kale", category: "Vegetables", price: "$2.49" }];
+
+        let tableBody = document.getElementById("productBody");
+        let addBtn = document.getElementById("addBtn");
+        function renderTable() {
+            tableBody.innerHTML = "";
+            products.forEach(function (p, index) {
+                let row = document.createElement("tr");
+
+                row.innerHTML = `<td>${p.name}</td>
+                <td>${p.category}</td>
+                <td>${p.price}</td>
+                <td><button class="deleteBtn">Delete</button></td>
+                `;
+                row.querySelector(".deleteBtn").addEventListener("click", function () {
+                    products.splice(index, 1);
+                    renderTable();
+                    });
+
+                tableBody.appendChild(row);
+            });
+        }
+        addBtn.addEventListener("click", function () {
+            let name = document.getElementById("name").value.trim();
+            let category = document.getElementById("category").value.trim();
+            let price = document.getElementById("price").value.trim();
+
+            if (name && category && price) {
+                products.push({ name: name, category: category, price: price });
+                renderTable();
+                document.getElementById("name").value = "";
+                document.getElementById("category").value = "";
+                document.getElementById("price").value = "";
+                }
+            });
+            renderTable();
+        })();
+    </script>
+</body>
+</html>
