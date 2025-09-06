@@ -6,3 +6,15 @@ Open brackets must be closed by the same type of brackets.
 Open brackets must be closed in the correct order.
 Every close bracket has a corresponding open bracket of the same type.
 */
+function isValid(s) {
+    let stack = []
+    let map = {')':'(', ']':'[', '}':'{'}
+    for (let ch of s) {
+        if (ch in map) {
+            if (!stack.length || stack.pop() !== map[ch]) return false
+        } else {
+            stack.push(ch)
+        }
+    }
+    return stack.length === 0
+}

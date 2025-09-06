@@ -7,3 +7,12 @@ Notice that rotating an array [a[0], a[1], a[2], ..., a[n-1]] 1 time results in 
 Given the sorted rotated array nums of unique elements, return the minimum element of this array.
 
 You must write an algorithm that runs in O(log n) time.*/
+function findMin(nums) {
+    let l = 0, r = nums.length - 1
+    while (l < r) {
+        let m = (l + r) >> 1
+        if (nums[m] > nums[r]) l = m + 1
+        else r = m
+    }
+    return nums[l]
+}
