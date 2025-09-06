@@ -1,5 +1,5 @@
-# Ignore the my-app folder in HW6
-HW6/my-app/
+# Ignore the my-app folder
+my-app/
 
 # Node modules (in case there are other Node.js projects)
 node_modules/
