@@ -1,132 +1,119 @@
-# JS 1 Study Notes
+# JavaScript DOM & ES6 Study Notes
 
-## Question 1: What is dynamic typing?
+## 1. What is DOM?
 
-**Answer:** Variables don't have fixed types. A variable can hold a number now and a string later. Type checks and conversions happen at runtime, which is flexible but can cause subtle bugs if you rely on implicit coercion.
+The Document Object Model, or DOM, is a representation of a web pages content in the form of objects, allowing developers to manipulate the content, structure, and styles of a web page.
 
-## Question 2: Explain the difference between var, let, & const.
+## 2. How can you select an HTML element using JavaScript?
 
-**Answer:**
+**Answer:** There are several methods to select HTML elements:
 
-- **var**: Function-scoped, hoisted and initialized to undefined, allows re-declaration in the same scope; ignores block scope.
-- **let**: Block-scoped, hoisted but in the TDZ (temporal dead zone) until declaration; no re-declaration in same scope.
-- **const**: Like let but must be initialized and cannot be reassigned (note: the object it points to can still be mutated).
+-1 `getElementById()` - This method returns the element that matches it's ID.
 
-## Question 3: What is immutability? What data types in JS are immutable?
+<!-- const $element = document.getElementById('my-id'); -->
 
-**Answer:** Immutability means a value cannot be changed after it's created. In JavaScript, the following are immutable primitives: number, string, boolean, null, undefined, symbol, bigint. These can only be replaced, not modified.
+- 2`getElementsByName()` - accepts a name which is the value of the name
+  attribute of elements and returns a live NodeList of elements.
 
-## Question 4: What is the difference between == and ===?
+- 3 `getElementsByTagName()` - This method returns an HTMLCollection of all elements that match the specified tag name.
+<!-- const $tagElements = document.getElementsByTagName('div'); -->
+- 4`getElementByClassName(className):` - This method returns the **first element** that matches the specified class.
+<!-- const $element = document.getElementByClassName('my-class'); -->
+- 5`getElementsByClassName(className):` - This methods returns a HTMLCollection of all elements that match the specified class.
+- 6`querySelector()` - Selects first element matching CSS selector
+- 7`querySelectorAll(selector)`- This method returns a NodeList of all elements in the document that match a specified CSS selector.
+<!-- const $links = document.querySelectorAll('a'); -->
 
-**Answer:**
+you'll generally use the **querySelector or querySelectorAll** methods.
+Since both of these methods accept any valid CSS selector, they are more flexible
 
-- **=== (strict equality)**: No type coercion;
-- **== (loose equality)**: Performs implicit type coercion before comparison; can be surprising.
+## 3. What is a DOM event?
 
-## Question 5: What are some examples of falsy values in JS?
+**Answer:** A DOM event is an action or occurrence in the browser (such as click, input, load, etc.) that JavaScript can listen to and respond to programmatically.
 
-**Answer:** The falsy values are: false, 0, -0, 0n, "" (empty string), null, undefined, NaN.
+## 4. How do we register event handlers for a selected element?
 
-## Question 6: Explain hoisting in JavaScript.
+**Answer:** There are three main ways to register event handlers:
 
-**Answer:** Declarations are conceptually moved to the top of their scope before code runs.
+1. **Inline HTML/Inline Event Handlers::**
+   You can specify an event handler directly in your HTML markup using an event attribute, such as onclick, onload, onmouseover, etc.
+   `<button onmouseover="myFunction()">Click me</button>`
+   Using something like the inline event handler is usually frowned upon because it mixes up your HTML & JavaScript in the same file.
+2. **Element Property:** `element.onclick = myFunction;`
+You can assign an event handler to an element's event handler property in your JavaScript code.
+This is similar to inline event handlers, but it separates your JavaScript from your HTML.
+<!-- const $button = document.getElementById('myButton');
+$button.onclick = function (event: Event) {
+  alert('Button clicked!');
+}; -->
+3. **Event listener method:** `element.addEventListener("click", myFunction);`
+      <!-- const $button = document.querySelector('button');
+      function handleClick(event: Event) {
+      alert('Button clicked!');
+      } -->
+   $button.addEventListener('click', handleClick);
+   The `addEventListener()` method is generally preferred as it allows multiple handlers for the same event.
+   The addEventListener method is more flexible, but also separates the HTML & JavaScript.
 
-- **var** and **function declarations** are hoisted; var is initialized to undefined, functions are hoisted with their body.
-- **let**, **const**, and **class** are hoisted but not initialized (TDZ) until their line executes.
-- **Function expressions** and **arrow functions** are not hoisted as functions; only the variable name is hoisted.
+## 5. Explain event delegation. Why is it important?
 
-## Question 7: Explain variable shadowing in Javascript.
+**Answer:** Event delegation is a technique where you attach a single event listener to a parent element and handle events for its children using `event.target`.
 
-**Answer:**
-Variable Shadowing occurs when we declare the same name for the variable in the
-inner and outer scope.
-The inner variable will hide or override the outer variable.
-The outer variable will become inaccessible in the inner scope.
+**Why it's important:**
 
-With var, shadowing is function-scoped (blocks don't create scope). With let/const, blocks do create scope.
+- **Efficiency:** Fewer event listeners compared to adding them directly to each child element
+- **Dynamic elements:** Automatically handles events for dynamically added elements
+- **Memory optimization:** Reduces memory usage and improves performance
 
-## Question 8: What are 3 ways to declare functions? What is their syntax?
+## 6. What is event propagation? How many phases are there? In what order does it occur?
 
-**Answer:**
+**Answer:** Event propagation describes how events move through the DOM tree. It consists of three phases:
 
-**1. Function Declaration:**
+1. **Capturing phase:** Event travels from the root down to the target element
+2. **Target phase:** Event reaches the target element
+3. **Bubbling phase:** Event travels back up from the target to the root
 
-```js
-function add(a, b) {
-  return a + b;
-}
-```
-
-Hoisted (with body), has a name, good for recursion.
-
-**2. Function Expression:**
-
-```js
-const add = function (a, b) {
-  return a + b;
-};
-```
-
-Not hoisted as a function; assigned to a variable.
-
-**3. Arrow Function:**
-
-```js
-const add = (a, b) => a + b;
-```
-
-## Question 9: What is a callback function?
-
-**Answer:** A function you pass as an argument to be invoked later (after an event, timer, async completion, etc.). Many JS APIs use them.
-
-```js
-setTimeout(() => console.log("done"), 1000);
-[1, 2, 3].forEach((n, i) => console.log(n, i));
-```
-
-## Question 10: What's the difference between primitive data types and reference data types in JS?
+## 7. Explain event bubbling and event capturing.
 
 **Answer:**
 
-- **Primitives**: Stored as values. Assigning/copying creates a new independent value. Types: number, string, boolean, null, undefined, symbol, bigint.
-- **Reference types**: Objects/arrays/functions are stored as references. Assigning/copying the variable copies the reference (two variables point to the same object).
+- **Bubbling:** After the target event is triggered, the event bubbles up from the target element to its ancestors (child → parent → grandparent)
+- **Capturing:** The event starts from the root and travels down to locate the specific target element (root → parent → child)
 
-## Question 11: What's the difference between array for loop and forEach?
+By default, event listeners are registered for the bubbling phase. You can specify capturing by passing `true` as the third parameter to `addEventListener()`.
 
-**Answer:**
+## 8. What is an IIFE?
 
-- **for loop**: Most control (break, continue, return from surrounding function); can be faster; flexible indices.
-- **forEach**: Cleaner iteration; cannot break/continue; ignores await in the callback (doesn't pause the outer function).
+**Answer:** IIFE stands for Immediately Invoked Function Expression. It's a function that runs immediately after it's defined.
 
-## Question 12: What's the difference between array map and forEach?
+**Syntax:** `(function() { /* code */ })();`
 
-**Answer:**
+**Benefits:**
 
-- **forEach**: Run a function once per element for side-effects (logging, mutating something external, updating DOM, etc.); returns undefined; can mutate original object.
-- **map**: Transforms each element and returns a new array of the same length; pure transformation.
+- Runs instantly upon definition
+- Avoids polluting the global scope
+- Creates a private scope for variables
 
-## Question 13: What is the difference between array slice and splice?
+## 9. What is the use of preventDefault method?
 
-**Answer:**
+**Answer:** `preventDefault()` is a method that stops the default browser behavior for an event.
 
-- **slice(start, end?)**: Non-mutating; returns a shallow copy of a segment.
-- **splice(start, deleteCount, ...items)**: Mutates the original array by removing/replacing/inserting elements; returns the removed items.
+**Common use cases:**
 
-## Question 14: What is 'use strict'? What are the major effects that it has?
+- Preventing form submission: `event.preventDefault()`
+- Stopping link navigation
+- Preventing right-click context menu
+- Blocking keyboard shortcuts
 
-**Answer:** Enables strict mode (file or function scope):
+## 10. Can you name some of the new ES6 bfeatures?
 
-- Converts many silent failures to errors (e.g., assigning to undeclared vars).
-- `this` inside functions is undefined (not window) when not called as a method.
-- Disallows duplicate parameter names, octal literals, with statement.
-- Restricts delete on variables/functions/params.
-- `eval` does not leak bindings into the enclosing scope.
-- Prefer modules (`<script type="module">`), which are strict by default.
+**Answer:** ES6 introduced many powerful features:
 
-## Question 15: What is an arguments object?
-
-**Answer:** An array-like object available inside non-arrow functions that contains the passed arguments.
-
-- Has length and indexed entries, but not real array methods.
-- In non-strict mode, it's linked to named parameters (mutations reflect each other). In strict mode, it's decoupled.
-- Modern JS prefers rest parameters.
+- **Variable declarations:** `let` and `const` (block-scoped)
+- **Arrow functions:** `() => {}` (shorter syntax, lexical `this`)
+- **Template literals:** `` `Hello ${name}` `` (string interpolation)
+- **Destructuring:** `{a, b} = obj` or `[x, y] = array`
+- **Function parameters:** Default, rest (`...args`), and spread (`...array`)
+- **Classes:** Object-oriented syntax with `class` keyword
+- **Modules:** `import` and `export` statements
+- **Promises:** Better asynchronous programming with `.then()` and `.catch()`
