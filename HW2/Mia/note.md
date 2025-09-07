@@ -9,7 +9,7 @@
 Use the `<link>` tag inside the `<head>`:
 
 ```html
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css" />
 ```
 
 ## 3. What is block element? How is it different from inline, and inline-block elements?
@@ -66,9 +66,9 @@ Using flexbox:
 
 ```css
 .container {
-  display: flex;              /* enable flexbox */
-  justify-content: center;    /* center horizontally */
-  align-items: center;        /* center vertically */
+  display: flex; /* enable flexbox */
+  justify-content: center; /* center horizontally */
+  align-items: center; /* center vertically */
 }
 ```
 
@@ -77,6 +77,7 @@ Using flexbox:
 **Grid items** are direct children of a CSS Grid container.
 
 Key properties include:
+
 - `grid-column-start`, `grid-column-end` (span columns)
 - `grid-row-start`, `grid-row-end` (span rows)
 - `justify-self` (align horizontally)
@@ -87,6 +88,7 @@ Key properties include:
 A **flex container** is an element with `display: flex;`.
 
 Key properties:
+
 - `flex-direction` → row / column layout
 - `justify-content` → align items horizontally
 - `align-items` → align items vertically
@@ -103,9 +105,8 @@ Key properties:
 **Responsive web design** ensures a site adapts to different screen sizes/devices.
 
 Achieved via:
+
 - **Relative units** (%, em, rem, vh, vw)
 - **Media queries** (`@media (max-width: 768px) { ... }`)
 - **Flexible layouts** (Flexbox, Grid)
 - **Fluid images** (`max-width: 100%`)
-
-
