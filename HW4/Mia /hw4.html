@@ -23,7 +23,9 @@
   </head>
   <body>
     <h2>Student Information</h2>
-    <button id="btn">Create table</button>
+    <button id="btn1">Create table</button>
+    <button id="btn2">test</button>
+    <button id="btn3">test2</button>
     <div id="table-container"></div>
     <script>
       const tableInfo = {
@@ -55,7 +57,8 @@
           },
         ],
       };
-      let btn = document.getElementById("btn");
+      let btn = document.getElementById("btn1");
+      let btn2 = document.getElementById("btn");
       btn.addEventListener("click", function () {
         // Create table 用 document.createElement("table") 创建一个 <table> 元素。
         const table = document.createElement("table");
