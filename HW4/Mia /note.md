@@ -105,7 +105,7 @@ By default, event listeners are registered for the bubbling phase. You can speci
 - Preventing right-click context menu
 - Blocking keyboard shortcuts
 
-## 10. Can you name some of the new ES6 bfeatures?
+## 10. Can you name some of the new ES6 features?
 
 **Answer:** ES6 introduced many powerful features:
 
