@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Tabs</title>
+  <style>
+
+  /* Tabs bar */
+  #tabbar {
+    display: flex;
+    background: #eee;
+    border: 1px solid #bbb;
+    border-bottom: none;
+    width: 620px;
+    margin: 24px 24px 0 24px;
+
+  }
+  #tabbar button {
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    border-right: 1px solid #bbb;
+  }
+  #tabbar button:last-child { border-right: none; }
+  #tabbar button.active { background: #cfcfcf; }
+  #tabbar button.highlight { background: #cfcfcf; }
+
+  /* Panels (all three divs) */
+  #london, #paris, #tokyo {
+    width: 604px;
+    border: 1px solid #bbb;
+    padding: 16px 0px 16px 16px;
+    margin: 0 24px 24px 24px;
+    background: #fff;
+    display: none;
+  }
+
+  #london {
+    display: block;
+  }
+
+  /* Minor typography to match screenshot feel */
+  #london h2, #paris h2, #tokyo h2 { margin: 0 0 8px; }
+  #london p, #paris p, #tokyo p { margin: 0; }
+</style>
+</head>
+<body>
+
+  <!-- Tabs -->
+  <div id="tabbar">
+    <button data-tab="london" class="highlight">London</button>
+    <button data-tab="paris">Paris</button>
+    <button data-tab="tokyo">Tokyo</button>
+  </div>
+
+  <!-- Panels -->
+  <div id="london">
+    <h2>London</h2>
+    <p>London is the capital city of England.</p>
+  </div>
+  <div id="paris">
+    <h2>Paris</h2>
+    <p>Paris is the capital of France.</p>
+  </div>
+  <div id="tokyo">
+    <h2>Tokyo</h2>
+    <p>Tokyo is the capital of Japan.</p>
+  </div>
+
+  <script>
+    const tabbar = document.getElementById('tabbar');
+    const buttons = tabbar.querySelectorAll('button');
+    const panels = document.querySelectorAll('#london, #paris, #tokyo');
+
+    // Initialize: hide all panels except London
+    panels.forEach(panel => {
+      if (panel.id !== 'london') {
+        panel.style.display = 'none';
+      }
+    });
+
+    tabbar.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') {
+        const targetId = e.target.dataset.tab;
+
+        // Remove highlight from all buttons
+        buttons.forEach(button => {
+          button.classList.remove('highlight');
+        });
+
+        // Add highlight to clicked button
+        e.target.classList.add('highlight');
+
+        // Hide all panels
+        panels.forEach(panel => {
+          panel.style.display = 'none';
+        });
+
+        // Show the selected panel
+        document.getElementById(targetId).style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Table</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #f2f2f2;
+    }
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="table-container"></div>
+
+  <script>
+    const tableInfo = {
+      tableHeader: ["Student Name", "Age", "Phone", "Address"],
+      tableContent: [
+        {
+          "Student Name": "John",
+          Age: 19,
+          Phone: "455-983-0903",
+          Address: "123 Ave, San Francisco, CA, 94011",
+        },
+        {
+          "Student Name": "Alex",
+          Age: 21,
+          Phone: "455-983-0912",
+          Address: "456 Rd, San Francisco, CA, 94012",
+        },
+        {
+          "Student Name": "Josh",
+          Age: 22,
+          Phone: "455-345-0912",
+          Address: "789 Dr, Newark, CA, 94016",
+        },
+        {
+          "Student Name": "Matt",
+          Age: 23,
+          Phone: "321-345-0912",
+          Address: "223 Dr, Sunnyvale, CA, 94016",
+        }
+      ]
+    };
+
+    // Create table
+    const table = document.createElement("table");
+
+    // Create header row
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    tableInfo.tableHeader.forEach(headerText => {
+      const th = document.createElement("th");
+      th.textContent = headerText;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create table body
+    const tbody = document.createElement("tbody");
+    tableInfo.tableContent.forEach(rowData => {
+      const row = document.createElement("tr");
+      tableInfo.tableHeader.forEach(key => {
+        const td = document.createElement("td");
+        td.textContent = rowData[key];
+        row.appendChild(td);
+      });
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    // Append to container
+    document.getElementById("table-container").appendChild(table);
+  </script>
+</body>
+</html>
