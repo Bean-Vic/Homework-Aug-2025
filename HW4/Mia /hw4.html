@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dynamic Table</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 80%;
+      }
+      th {
+        border: 3px solid #8e0c0c;
+      }
+      td {
+        border: 1px solid #555;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Student Information</h2>
+    <button id="btn1">Create table</button>
+    <button id="btn2">test</button>
+    <button id="btn3">test2</button>
+    <div id="table-container"></div>
+    <script>
+      const tableInfo = {
+        tableHeader: ["Student Name", "Age", "Phone", "Address"],
+        tableContent: [
+          {
+            "Student Name": "John",
+            Age: 19,
+            Phone: "455 - 983 - 0903",
+            Address: "123 Ave, San Francisco, CA, 94011",
+          },
+          {
+            "Student Name": "Alex",
+            Age: 21,
+            Phone: "455 - 983 - 0912",
+            Address: "456 Rd, San Francisco, CA, 94012",
+          },
+          {
+            "Student Name": "Josh",
+            Age: 22,
+            Phone: "455 - 345 - 0912",
+            Address: "789 Dr, Newark, CA, 94016",
+          },
+          {
+            "Student Name": "Matt",
+            Age: 23,
+            Phone: "321 - 345 - 0912",
+            Address: "223 Dr, Sunnyvale, CA, 94016",
+          },
+        ],
+      };
+      let btn = document.getElementById("btn1");
+      let btn2 = document.getElementById("btn");
+      btn.addEventListener("click", function () {
+        // Create table 用 document.createElement("table") 创建一个 <table> 元素。
+        const table = document.createElement("table");
+        // Create header row
+        const thead = document.createElement("thead"); //创建 <thead>（表头部分）。
+        const headerRow = document.createElement("tr"); //创建 <tr>（表头行）
+        tableInfo.tableHeader.forEach((header) => {
+          //遍历 tableInfo.tableHeader，对每个列名：
+          const th = document.createElement("th"); //创建 <th>（表头单元格）
+          th.textContent = header; //把列名写进去 (th.textContent = header)
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        // 最后把 <tr> 放进 <thead>，再把 <thead> 放进 <table>
+
+        // Create body rows
+        const tbody = document.createElement("tbody");
+        tableInfo.tableContent.forEach((rowData) => {
+          const tr = document.createElement("tr");
+          tableInfo.tableHeader.forEach((header) => {
+            const td = document.createElement("td");
+            td.textContent = rowData[header];
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        // Append table to container
+        document.getElementById("table-container").appendChild(table);
+      });
+    </script>
+  </body>
+</html>
