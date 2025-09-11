@@ -1,4 +1,6 @@
 import React from "react";
+import Button from "@mui/material/Button";
+
 // --- High Order Component for localStorage ---
 function withLocalStorage(WrappedComponent, key) {
   return class extends React.Component {
@@ -68,9 +70,13 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <button onClick={this.handleClickMinus}>sub</button>
+        <Button variant="contained" onClick={this.handleClickMinus}>
+          sub
+        </Button>
         <span>Render current state on web page: {this.state.counter}</span>
-        <button onClick={this.handleClick}>add</button>
+        <Button variant="outlined" onClick={this.handleClick}>
+          add
+        </Button>
       </>
     );
   }
