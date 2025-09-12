@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Management Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#fff;margin:0;padding:32px}
+  .wrap{max-width:900px;margin:0 auto}
+  table{width:100%;border-collapse:collapse;margin-bottom:20px}
+  th,td{border:1px solid #ccc;padding:10px;text-align:left}
+  thead th{background:#f5f5f5;font-weight:bold}
+  tbody tr:nth-child(even){background:#f9f9f9}
+  .del{padding:4px 8px;border:1px solid #999;border-radius:4px;background:#eee;cursor:pointer}
+  hr{margin:20px 0}
+  h3{margin:0 0 10px}
+  .form{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .form label{font-size:14px}
+  .form input{padding:4px 6px;border:1px solid #ccc;border-radius:3px}
+  .form button{padding:5px 10px;border:1px solid #888;border-radius:3px;background:#eee;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Product Category</th>
+        <th>Product Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <hr>
+  <h3>Add Product</h3>
+  <div class="form">
+    <label>Product Name:<input id="name"></label>
+    <label>Product Category:<input id="cat"></label>
+    <label>Product Price:<input id="price"></label>
+    <button id="add">Add New</button>
+  </div>
+</div>
+
+<script>
+  const list=document.getElementById("list");
+  const nameInput=document.getElementById("name");
+  const priceInput=document.getElementById("price");
+  const catInput=document.getElementById("cat");
+  const addBtn=document.getElementById("add");
+
+  let data=[
+    {name:"M&M",cat:"Snacks",price:"$1.99"},
+    {name:"Table",cat:"Furniture",price:"$199"},
+    {name:"Kale",cat:"Vegetables",price:"$2.49"}
+  ];
+
+  function render(){
+    list.innerHTML="";
+    data.forEach((it,idx)=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${it.name}</td><td>${it.cat}</td><td>${it.price}</td><td><button class="del" data-i="${idx}">Delete</button></td>`;
+      list.appendChild(tr);
+    });
+  }
+
+  function clearInputs(){
+    nameInput.value="";
+    priceInput.value="";
+    catInput.value="";
+  }
+
+  addBtn.addEventListener("click",()=>{
+    const n=nameInput.value.trim();
+    const p=priceInput.value.trim();
+    const c=catInput.value.trim();
+    if(!n||!p||!c)return;
+    data.push({name:n,cat:c,price:p});
+    render();
+    clearInputs();
+  });
+
+  list.addEventListener("click",(e)=>{
+    const btn=e.target.closest(".del");
+    if(!btn)return;
+    const i=Number(btn.dataset.i);
+    data.splice(i,1);
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
