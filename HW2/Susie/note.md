@@ -57,6 +57,7 @@ gap: spacing between items
 14. Assume a parent element has width = 200px and one child element. If the child
 element’s width is set to ‘auto’, what are the values of its width, left-margin, &
 right-margin?
+Width = 200px, margin-left = 0, margin-right = 0
 
 15. What is responsive web design? How do we achieve this?
 Responsive web design is an approach to web design across different devices, from different sizes desktop monitors to mobile phones. Ensure the website looks and functions well on any screen size or devices.
