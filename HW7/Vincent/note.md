@@ -1,4 +1,4 @@
-# eact Study Notes - Interview Ready Answers
+# React Study Notes - Interview Ready Answers
 
 ## 1. How do we do prop types check?
 
@@ -90,7 +90,7 @@ Code-split components and only load them when needed, which reduces initial bund
 ## 8. what is useState and what value we should pass in as prop?
 
 **Answer:**
-`useState(initial)` returns `[state, setState]`. We should pass in the initial state value.
+`useState(initial)` returns `[state, setState]`. We should pass in the initial state value. the value is immutable.
 
 **Key points:**
 - Can be a primitive value, object, or function
