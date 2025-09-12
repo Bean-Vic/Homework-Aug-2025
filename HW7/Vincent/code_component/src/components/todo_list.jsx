@@ -1,0 +1,333 @@
+"use client"
+
+import React, { useReducer, useState, useEffect } from "react";
+
+// Reducer function for managing todos with object-based structure
+function todosReducer(state, action) {
+    switch (action.type) {
+        case "LOAD_TODOS":
+            return action.payload;
+
+        case "ADD_TODO":
+            const newId = Date.now().toString();
+            return {
+                ...state,
+                [newId]: {
+                    id: newId,
+                    text: action.payload.text.trim(),
+                    completed: false
+                }
+            };
+
+        case "DELETE_TODO":
+            const { [action.payload.id]: deleted, ...remaining } = state;
+            return remaining;
+
+        case "TOGGLE_TODO":
+            return {
+                ...state,
+                [action.payload.id]: {
+                    ...state[action.payload.id],
+                    completed: !state[action.payload.id].completed
+                }
+            };
+
+        case "EDIT_TODO":
+            return {
+                ...state,
+                [action.payload.id]: {
+                    ...state[action.payload.id],
+                    text: action.payload.text.trim()
+                }
+            };
+
+        case "CLEAR_COMPLETED":
+            const activeTodos = {};
+            Object.values(state).forEach(todo => {
+                if (!todo.completed) {
+                    activeTodos[todo.id] = todo;
+                }
+            });
+            return activeTodos;
+
+        default:
+            return state;
+    }
+}
+
+// Custom hook to manage all todo-related state and operations
+const useTodos = () => {
+    const [todos, dispatch] = useReducer(todosReducer, {});
+    const [inputValue, setInputValue] = useState("");
+    const [filter, setFilter] = useState("All"); // All, Active, Completed
+    const [editingId, setEditingId] = useState(null);
+    const [editingText, setEditingText] = useState("");
+
+    useEffect(() => {
+        const savedTodos = localStorage.getItem("todo-list");
+        if (savedTodos) {
+            try {
+                const parsedTodos = JSON.parse(savedTodos);
+                // Convert array format to object format if needed
+                const todosObject = Array.isArray(parsedTodos)
+                    ? parsedTodos.reduce((acc, todo) => {
+                        acc[todo.id] = todo;
+                        return acc;
+                    }, {})
+                    : parsedTodos;
+                dispatch({ type: "LOAD_TODOS", payload: todosObject });
+            } catch (error) {
+                console.error("Error parsing saved todos:", error);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem("todo-list", JSON.stringify(todos));
+    }, [todos]);
+
+    const addTodo = (text) => {
+        if (text.trim() !== "") {
+            dispatch({ type: "ADD_TODO", payload: { text } });
+            setInputValue("");
+        }
+    };
+
+    const deleteTodo = (id) => {
+        dispatch({ type: "DELETE_TODO", payload: { id } });
+    };
+
+    const toggleTodo = (id) => {
+        dispatch({ type: "TOGGLE_TODO", payload: { id } });
+    };
+
+    const editTodo = (id, text) => {
+        if (text.trim() !== "") {
+            dispatch({ type: "EDIT_TODO", payload: { id, text } });
+        }
+        setEditingId(null);
+        setEditingText("");
+    };
+
+    const clearCompleted = () => {
+        dispatch({ type: "CLEAR_COMPLETED" });
+    };
+
+    // Helper functions
+    const startEdit = (id, text) => {
+        setEditingId(id);
+        setEditingText(text);
+    };
+
+    const cancelEdit = () => {
+        setEditingId(null);
+        setEditingText("");
+    };
+
+    // Convert object to array for rendering and filtering
+    const todosArray = Object.values(todos);
+
+    const filteredTodos = todosArray.filter(todo => {
+        if (filter === "Active") return !todo.completed;
+        if (filter === "Completed") return todo.completed;
+        return true; // All
+    });
+
+    const todosCount = todosArray.length;
+    const hasCompletedTodos = todosArray.some(todo => todo.completed);
+
+    return {
+        // State
+        todos: filteredTodos,
+        inputValue,
+        filter,
+        editingId,
+        editingText,
+        todosCount,
+        hasCompletedTodos,
+
+        // State setters
+        setInputValue,
+        setFilter,
+        setEditingText,
+
+        // Actions
+        addTodo,
+        deleteTodo,
+        toggleTodo,
+        editTodo,
+        clearCompleted,
+        startEdit,
+        cancelEdit
+    };
+};
+
+export const TodoList = () => {
+    const {
+        // State
+        todos: filteredTodos,
+        inputValue,
+        filter,
+        editingId,
+        editingText,
+        todosCount,
+        hasCompletedTodos,
+
+        // State setters
+        setInputValue,
+        setFilter,
+        setEditingText,
+
+        // Actions
+        addTodo,
+        deleteTodo,
+        toggleTodo,
+        editTodo,
+        clearCompleted,
+        startEdit,
+        cancelEdit
+    } = useTodos();
+
+    // Handle input key press
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            addTodo(inputValue);
+        }
+    };
+
+    const handleKeyDownEdit = (e) => {
+        if (e.key === "Enter") {
+            editTodo(editingId, editingText);
+        } else if (e.key === "Escape") {
+            cancelEdit();
+        }
+    };
+
+    return (
+    <>
+        <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+            {/* Title Area */}
+            <div className="flex items-center justify-between mb-6">
+                <h1 className="text-3xl font-bold text-gray-800">ToDo</h1>
+                <span className="text-lg text-gray-600 font-medium">{todosCount} items left</span>
+            </div>
+
+            {/* Input Field */}
+            <div className="flex gap-3 mb-6">
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Add a task..."
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    aria-label="Enter new task"
+                />
+                <button
+                    onClick={() => addTodo(inputValue)}
+                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                    aria-label="Add task"
+                >
+                    Add
+                </button>
+            </div>
+
+            {/* Todo Lists */}
+            <div className="mb-6">
+                {filteredTodos.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                        No tasks found. Add a task to get started!
+                    </div>
+                ) : (
+                    filteredTodos.map(todo => (
+                        <div key={todo.id} className="flex items-center gap-3 py-3 px-2 border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                            <input
+                                type="checkbox"
+                                checked={todo.completed}
+                                onChange={() => toggleTodo(todo.id)}
+                                className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                aria-label={`Mark "${todo.text}" as ${todo.completed ? 'incomplete' : 'complete'}`}
+                            />
+
+                            {editingId === todo.id ? (
+                                <>
+                                    <input
+                                        type="text"
+                                        value={editingText}
+                                        onChange={(e) => setEditingText(e.target.value)}
+                                        onKeyDown={handleKeyDownEdit}
+                                        className="flex-1 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        autoFocus
+                                        aria-label={`Edit ${todo.text}`}
+                                    />
+                                    <button
+                                        onClick={() => editTodo(editingId, editingText)}
+                                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                                        aria-label={`Save changes to ${todo.text}`}
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={cancelEdit}
+                                        className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+                                        aria-label={`Cancel editing ${todo.text}`}
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}>
+                                        {todo.text}
+                                    </span>
+                                    <button
+                                        onClick={() => startEdit(todo.id, todo.text)}
+                                        className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
+                                        aria-label={`Edit ${todo.text}`}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => deleteTodo(todo.id)}
+                                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                                        aria-label={`Delete ${todo.text}`}
+                                    >
+                                        Delete
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Footer Navigation */}
+            <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                <div className="flex gap-2">
+                    {["All", "Active", "Completed"].map(filterType => (
+                        <button
+                            key={filterType}
+                            onClick={() => setFilter(filterType)}
+                            className={`px-4 py-2 rounded-lg border transition-colors ${
+                                filter === filterType
+                                    ? 'bg-blue-500 text-white border-blue-500'
+                                    : 'bg-white text-blue-500 border-blue-500 hover:bg-blue-50'
+                            }`}
+                        >
+                            {filterType}
+                        </button>
+                    ))}
+                </div>
+
+                <button
+                    onClick={clearCompleted}
+                    disabled={!hasCompletedTodos}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                >
+                    Clear Completed
+                </button>
+            </div>
+        </div>
+    </>
+    );
+};
