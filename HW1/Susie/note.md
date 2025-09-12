@@ -3,22 +3,17 @@ HTML stands for Hypertext Markup Language, used by web browsers to render web pa
 
 #### 2. What is the minimal structure of an HTML5 document?
 ```html 
-<!-- declares that document is HTML5 -->
-<!DOCTYPE html>
-<!-- specifies the language -->
-<html lang="en">
-  <!-- contains metadata, title, and links to CSS/JS -->
-<head>
-  <!-- metadata, sets character encoding to UTF-8 -->
-    <meta charset="UTF-8">
-    <!-- title, appears in the browser tab -->
-    <title>Document</title>
-</head>
-<!-- contains content of the page -->
-<body>
-</body>
-</html>
+<!DOCTYPE html> — this declares the document is HTML5.
+
+<html lang="en"> — the root element that also specifies the language.
+
+Inside it, we have a <head> section, which holds metadata like <meta charset="UTF-8"> to set character encoding, and <title> which defines the title shown in the browser tab.
+
+Then we have the <body> tag, which contains all the visible content of the page.
+
+Finally, we close the </html> tag.
 ```
+
 #### 3. What is the purpose of the <meta> tag?
 Meta tag defines metadata, which is information about data. It provides essential information for browsers and search engines and other web services, helping with SEO(search engine optimization) by description and keywords, responsive design by viewport, etc.
 
