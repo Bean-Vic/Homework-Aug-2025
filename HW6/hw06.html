@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>HW6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            background: white;
+            padding: 24px;
+            color: black;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 720px;
+            margin: 16px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 12px;
+        }
+
+        h2 {
+            margin: 0 0 12px;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        select,
+        input,
+        button {
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 1px solid white;
+            border-radius: 8px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: black;
+            color: white;
+            border-color: black;
+        }
+
+        button.ghost {
+            background: black;
+            color: white;
+            border-color: black;
+        }
+
+        .spacer {
+            height: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid white;
+            text-align: left;
+        }
+
+        tfoot td {
+            font-weight: 700;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .counterBox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 6px 10px;
+            background: black;
+            color: white;
+            border-radius: 999px;
+            min-width: 56px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function withLocalStorage(WrappedComponent, storageKey) {
+            return class extends React.Component {
+                constructor(props) {
+                    super(props);
+                    let initial = props.initialValue ?? 0;
+                    try {
+                        const cached = window.localStorage.getItem(storageKey);
+                        if (cached !== null && cached !== undefined) {
+                            initial = JSON.parse(cached);
+                        }
+                    } catch (e) { }
+                    this.state = { value: initial };
+                    this.handleChange = this.handleChange.bind(this);
+                }
+                componentDidUpdate(_, prevState) {
+                    if (prevState.value !== this.state.value) {
+                        try { window.localStorage.setItem(storageKey, JSON.stringify(this.state.value)); }
+                        catch (e) { }
+                    }
+                }
+                handleChange(nextValue) {
+                    this.setState({ value: nextValue });
+                }
+                render() {
+                    return (<WrappedComponent{...this.props} persistedValue={this.state.value} onPersistedChange={this.handleChange} />);
+                }
+            };
+        }
+        class Counter extends React.Component {
+            constructor(props) {
+                super(props);
+                const start = (props.persistedValue !== undefined)
+                    ? props.persistedValue
+                    : (props.initialValue ?? 0);
+                this.state = { value: start };
+                this.handleInc = this.handleInc.bind(this);
+                this.handleDec = this.handleDec.bind(this);
+                this.syncIfHOC = this.syncIfHOC.bind(this);
+            }
+            componentDidUpdate(prevProps, prevState) {
+                if (this.props.persistedValue !== undefined && prevProps.persistedValue !== this.props.persistedValue) {
+                    this.setState({ value: this.props.persistedValue });
+                }
+                if (prevState.value !== this.state.value) {
+                    this.syncIfHOC(this.state.value);
+                }
+            }
+            syncIfHOC(next) {
+                if (typeof this.props.onPersistedChange === 'function') {
+                    this.props.onPersistedChange(next);
+                }
+            }
+
+            handleInc() { this.setState(prev => ({ value: prev.value + 1 })); }
+            handleDec() { this.setState(prev => ({ value: prev.value - 1 })); }
+
+            render() {
+                return (
+                    <div className="card">
+                        <h2> Counter </h2>
+                        <div className="counterBox">
+                            <button className="ghost" onClick={this.handleDec}>−</button>
+                            <span className="pill">{this.state.value}</span>
+                            <button className="primary" onClick={this.handleInc}>+</button>
+                        </div>
+                        <div className="spacer"></div>
+                        <div>Initial value (prop): <b>{this.props.initialValue ?? 0}</b></div>
+                        <div>Managed in <b>state</b>; updates trigger re-render.</div>
+                    </div>
+                );
+            }
+        }
+        const PersistentCounter = withLocalStorage(Counter, "hw6-counter");
+        class MiniCart extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    selectedId: props.products[0].id,
+                    qty: 1,
+                    cart: []
+                };
+                this.handleSelect = this.handleSelect.bind(this);
+                this.handleQty = this.handleQty.bind(this);
+                this.handleAdd = this.handleAdd.bind(this);
+                this.handleRemove = this.handleRemove.bind(this);
+            }
+
+            handleSelect(e) {
+                this.setState({ selectedId: e.target.value });
+            }
+
+            handleQty(e) {
+                const n = parseInt(e.target.value, 10);
+                this.setState({ qty: isNaN(n) || n < 1 ? 1 : n });
+            }
+
+            handleAdd() {
+                const { selectedId, qty, cart } = this.state;
+                const product = this.props.products.find(p => String(p.id) === String(selectedId));
+                if (!product) return;
+                const next = cart.slice();
+                const idx = next.findIndex(x => x.id === product.id);
+                if (idx >= 0) {
+                    next[idx] = { ...next[idx], qty: next[idx].qty + qty };
+                } else {
+                    next.push({ id: product.id, name: product.name, price: product.price, qty });
+                }
+                this.setState({ cart: next });
+            }
+
+            handleRemove(id) {
+                const next = this.state.cart.filter(item => item.id !== id);
+                this.setState({ cart: next });
+            }
+
+            renderCartRows() {
+                return this.state.cart.map(item => (
+                    <tr key={item.id}>
+                        <td>{item.name}</td>
+                        <td className="right">${item.price.toFixed(2)}</td>
+                        <td className="right">{item.qty}</td>
+                        <td className="right">${(item.price * item.qty).toFixed(2)}</td>
+                        <td className="right">
+                            <button className="ghost" onClick={() => this.handleRemove(item.id)}>Remove</button>
+                        </td>
+                    </tr>
+                ));
+            }
+
+            calcTotal() {
+                return this.state.cart.reduce((sum, it) => sum + it.price * it.qty, 0);
+            }
+
+            render() {
+                const { products } = this.props;
+                const { selectedId, qty } = this.state;
+                return (
+                    <div className="card">
+                        <h2>Mini Shopping Cart</h2>
+
+                        <div className="row">
+                            <select value={selectedId} onChange={this.handleSelect}>
+                                {products.map(p => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.name} (${p.price.toFixed(2)})
+                                    </option>
+                                ))}
+                            </select>
+
+                            <input
+                                type="number"
+                                min="1"
+                                value={qty}
+                                onChange={this.handleQty}
+                                style={{ width: 100 }}
+                            />
+
+                            <button className="primary" onClick={this.handleAdd}>Add</button>
+                        </div>
+
+                        <div className="spacer"></div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th className="right">Price</th>
+                                    <th className="right">Qty</th>
+                                    <th className="right">Subtotal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.cart.length === 0 ? (
+                                    <tr><td colSpan="5">Your cart is empty.</td></tr>
+                                ) : this.renderCartRows()}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colSpan="3" className="right">Total:</td>
+                                    <td className="right">${this.calcTotal().toFixed(2)}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                );
+            }
+        }
+
+        class App extends React.Component {
+            render() {
+                const products = [
+                    { id: 'A', name: 'Product A', price: 15.00 },
+                    { id: 'B', name: 'Product B', price: 25.00 },
+                    { id: 'C', name: 'Product C', price: 20.00 },
+                    { id: 'D', name: 'Product D', price: 12.50 },
+                ];
+                return (
+                    <div>
+                        <h1>Mini Shopping Cart</h1>
+                        {/* Counter */}
+                        <PersistentCounter initialValue={1} />
+                        {/* Cart */}
+                        <MiniCart products={products} />
+                    </div>
+                );
+            }
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
