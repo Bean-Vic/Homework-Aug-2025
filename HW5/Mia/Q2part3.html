@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Part 3 - Delayed Request</title>
+  </head>
+  <body>
+    <h2>Part 3: Delayed Request</h2>
+    <button id="fetchBtn">Send Delayed Request</button>
+    <p id="output"></p>
+
+    <script>
+      async function delayedRequest(
+        url = "https://jsonplaceholder.typicode.com/users/1"
+      ) {
+        const $output = document.getElementById("output");
+
+        // 1. 用户点击后立刻提示
+        $output.textContent = "Waiting...";
+
+        try {
+          // 2. 发出请求
+          const res = await fetch(url);
+          const data = await res.json();
+
+          // 3. 延迟两秒再输出结果
+          setTimeout(() => {
+            console.log(JSON.stringify(data, null, " ")); // 格式化输出到 console
+            $output.textContent = "Check console for the data"; // 更新提示信息
+          }, 2000);
+        } catch (err) {
+          $output.textContent = "Error fetching data.";
+        }
+      }
+
+      // 点击按钮时执行
+      document.getElementById("fetchBtn").addEventListener("click", () => {
+        delayedRequest("https://jsonplaceholder.typicode.com/users/2");
+      });
+    </script>
+  </body>
+</html>

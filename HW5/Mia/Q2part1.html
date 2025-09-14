@@ -3,6 +3,7 @@
     <!-- // Part 1: Display all users in table -->
 
     <h2>用户列表</h2>
+    <button id="loadBtn" type="button">Load users</button>
     <table id="usersTable">
       <thead>
         <tr>
@@ -46,7 +47,8 @@
         }
       }
 
-      loadUsers();
+      const btn = document.getElementById("loadBtn");
+      btn.addEventListener("click", loadUsers);
     </script>
   </body>
 </html>
