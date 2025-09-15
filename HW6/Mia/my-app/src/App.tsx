@@ -39,9 +39,19 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleClickMinus = this.handleClickMinus.bind(this);
   }
-
+  // componentDidMount() {
+  // componentDidMount will only run when the componenent mounts
+  // useEffect will only run your effect the very first time your componenet mounts
+  //   console.log("componentDidMount");
+  //   fetch("https://swapi.dev/api/people/1")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       this.setState({ character: data });
+  //     });
+  // }
   // Updating Phase
   componentDidUpdate(prevProps) {
+    //it will run whatever code we put inside here
     console.log("componentDidUpdate");
     // you can do some update logic here with prevProps
     console.log(`
