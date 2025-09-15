@@ -1,0 +1,67 @@
+/* 整体页面 */
+body {
+  font-family: "Source Sans Pro";
+  font-size: 32px;
+  line-height: 1.5;
+  background: #fff;
+  color: #33333390;
+  margin: 0; /* 去掉默认边距 */
+}
+
+/* 页面整体容器（如不设最大宽度会占满全宽） */
+.page {
+  max-width: 960px;
+  margin: 0;
+}
+
+header {
+  background: #9acd32;
+  height: 110px;
+  padding: 20px;
+  font-weight: bold;
+  align-items: center;
+}
+
+/* 中间内容：用 Grid 做三列布局：左160 | 中自适应 | 右160 */
+.main {
+  display: grid;
+  grid-template-columns: 160px 1fr 160px;
+  height: 380px;
+  margin: 0;
+  font-weight: bold;
+}
+
+/* 左侧 nav（不再写 width，宽度交给 grid 第一列） */
+nav {
+  background: #f5f5d7;
+  padding: 20px;
+}
+
+/* 中间 article（加 min-width:0 防溢出） */
+article {
+  padding: 20px;
+  background: #fff;
+  border-left: 1px solid #eee;
+  min-width: 0; /* 防止内容把中间列撑爆 */
+}
+
+/* 右侧 aside（同 nav） */
+aside {
+  background: #f5f5d7;
+  padding: 20px;
+}
+
+/* 底部：保持原样 */
+footer {
+  background: #ffff00d2;
+  height: 60px;
+  padding: 20px;
+  font-weight: bold;
+}
+
+/* 小屏幕把它排列树起来*/
+@media (max-width: 600px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+}
