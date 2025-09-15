@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mini Shopping Cart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  :root{--b:#e5e7eb;--g:#f7f7f7;--tx:#111827}
+  *{box-sizing:border-box}
+  body{font-family:Arial,Helvetica,sans-serif;color:var(--tx);margin:0;padding:32px}
+  .wrap{max-width:900px;margin:0 auto;display:grid;gap:24px}
+  .card{border:1px solid var(--b);border-radius:10px;background:var(--g);padding:18px}
+  h2{margin:0 0 14px;font-size:22px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  select,input,button{height:36px;padding:0 10px;border:1px solid var(--b);border-radius:6px;background:#fff}
+  button{background:#eee;cursor:pointer}
+  button:disabled{opacity:.6;cursor:not-allowed}
+  table{width:100%;border-collapse:separate;border-spacing:0}
+  th,td{border:1px solid var(--b);padding:10px 12px;text-align:left}
+  thead th{background:#e9e9e9}
+  tbody tr:nth-child(even){background:#f3f3f3}
+  .right{text-align:right}
+  .sum{display:flex;justify-content:flex-end;margin-top:10px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo}=React
+function App(){
+  const items=[{id:1,name:"Product A",price:1.2},{id:2,name:"Product B",price:2.5},{id:3,name:"Product C",price:3.1},{id:4,name:"Product D",price:4.8}]
+  const [opt,setOpt]=useState(items[0].id)
+  const [qty,setQty]=useState(1)
+  const [cart,setCart]=useState([])
+  const fmt=n=>new Intl.NumberFormat(undefined,{style:"currency",currency:"USD"}).format(n)
+  const add=()=>{
+    const id=Number(opt)
+    const q=Math.max(1,Math.floor(Number(qty)||0))
+    const it=items.find(x=>x.id===id)
+    const i=cart.findIndex(x=>x.id===id)
+    if(i===-1)setCart([...cart,{id:it.id,name:it.name,price:it.price,qty:q}])
+    else{
+      const cp=[...cart]
+      cp[i]={...cp[i],qty:cp[i].qty+q}
+      setCart(cp)
+    }
+    setQty(1)
+  }
+  const del=id=>setCart(cart.filter(x=>x.id!==id))
+  const sum=useMemo(()=>cart.reduce((s,x)=>s+x.price*x.qty,0),[cart])
+  const ok=Number.isFinite(Number(opt))&&Number(qty)>=1
+  return(
+    <div className="wrap">
+      <div className="card">
+        <h2>Mini Shopping Cart</h2>
+        <div className="row" style={{gap:12,marginBottom:12}}>
+          <select value={opt} onChange={e=>setOpt(Number(e.target.value))}>
+            {items.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}
+          </select>
+          <input type="number" min="1" value={qty} onChange={e=>setQty(e.target.value)} placeholder="Qty" style={{width:120}} />
+          <button onClick={add} disabled={!ok}>Add to Cart</button>
+        </div>
+        <table>
+          <thead><tr><th>Item</th><th className="right">Price</th><th className="right">Qty</th><th className="right">Total</th><th>Action</th></tr></thead>
+          <tbody>
+            {cart.length===0?<tr><td colspan="5">No items</td></tr>:cart.map(x=>{
+              const t=x.price*x.qty
+              return(<tr key={x.id}><td>{x.name}</td><td className="right">{fmt(x.price)}</td><td className="right">{x.qty}</td><td className="right">{fmt(t)}</td><td><button onClick={()=>del(x.id)}>Delete</button></td></tr>)
+            })}
+          </tbody>
+        </table>
+        <div className="sum">Grand Total: {fmt(sum)}</div>
+      </div>
+    </div>
+  )
+}
+const root=ReactDOM.createRoot(document.getElementById("root"))
+root.render(<App/>)
+</script>
+</body>
+</html>
