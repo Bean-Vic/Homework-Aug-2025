@@ -61,25 +61,33 @@ React accesses the form element value using a ref.In this case, refs are used to
 
 # 9. Explain the React component lifecycle.
 
-# 10. List some lifecycle methods and explain what do they do
-
-the stages that a component follows from when it appears on the page to when it is removed.
 There are 3 main categories of life cycle methods in React: mounting, updating, and unmounting.
 **Mounting:** constructor(). render(), componentDidMount(). (called when component is being created and inserted into the DOM)
 **Updating:** componentDidUpdate(), setState(). (called when component being re-rendered)
 **Unmounting:** componentWillUnmount(). (called when component being removed from the DOM)
+the stages that a component follows from when it appears on the page to when it is removed.
+
+# 10. List some lifecycle methods and explain what do they do
+
+Key lifecycle methods include:
+
+componentDidMount(): Called after first render - ideal for API calls, setting up subscriptions
+componentDidUpdate(): Called after updates - used for side effects based on prop/state changes
+componentWillUnmount(): Called before component removal - cleanup (remove listeners, cancel timers, abort requests)
+shouldComponentUpdate(): Performance optimization - determines if component should re-render
+getDerivedStateFromProps(): Updates state based on prop changes (rarely used)
 
 # 11. What is the execution order of constructor, render, and lifecycle methods?
 
 Answer: For class components, the execution order is:
 
-Mounting:
+**Mounting:**
 
 constructor() - Initialize state and bind methods
 getDerivedStateFromProps() - Update state from props
 render() - Return JSX
 componentDidMount() - Post-render side effects
-Updating:
+**Updating:**
 
 getDerivedStateFromProps()
 shouldComponentUpdate()
@@ -133,3 +141,11 @@ onFocus/onBlur - Handle input focus states
 onLoad - Handle resource loading completion
 
 # 16. How do React handle errors?
+
+React handles errors through Error Boundaries, which are components that:
+
+Catch JavaScript errors anywhere in the child component tree
+Log errors and display fallback UI instead of crashing the entire app
+Only catch errors in render methods, lifecycle methods, and constructors
+Don't catch errors in event handlers, async code, or during server-side rendering
+Error boundaries are implemented using componentDidCatch() and getDerivedStateFromError() in class components, or the react-error-boundary library for functional components.
