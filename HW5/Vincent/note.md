@@ -14,7 +14,7 @@ The **this** keyword references the object that is currently calling the functio
 
 ## 4. What does the event loop do? What data structures does it use?
 
-The event loop manages JavaScript's single-threaded execution by coordinating synchronous and asynchronous tasks without blocking the main thread. It uses four main components: the **call stack** for function execution, the **heap** for memory allocation, **Web APIs** for async operations like setTimeout, and the **callback queue** for completed async tasks. The queue has two parts: microtasks (like Promises) which have higher priority, and macrotasks (like setTimeout). The execution order is: synchronous functions first, then all microtasks, then one macrotask, and repeat.
+The event loop manages JavaScript's single-threaded execution by coordinating synchronous and asynchronous tasks without blocking the main thread. It uses four main components: the **call stack** for function execution, the **heap** for memory allocation, **Web APIs** for async operations like setTimeout, and the **callback queue** for completed async tasks. The queue has two parts: microtasks (like Promises) which have higher priority, and macrotasks (like setTimeout). The execution order is: synchronous functions first, then checks if the call stack is empty and then pushes tasks from the callback queue into the stack for execution. Then all microtasks, then one macrotask, and repeat.
 
 ## 5. What is the callback queue?
 

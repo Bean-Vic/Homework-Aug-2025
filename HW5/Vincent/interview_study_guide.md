@@ -3,12 +3,12 @@
 ## 1. innerHTML vs textContent
 
 ### Key Differences:
-- **innerHTML**: 
+- **innerHTML**:
   - Parses HTML strings → creates DOM nodes
   - Triggers reflow/repaint
   - Returns full markup with tags
   - Security risk (XSS attacks)
-- **textContent**: 
+- **textContent**:
   - Plain text only, no HTML parsing
   - Faster performance
   - Returns text without markup
@@ -32,7 +32,7 @@
 
 ### Memory Aid:
 - **Call**: Call now with individual args
-- **Apply**: Apply now with Array args  
+- **Apply**: Apply now with Array args
 - **Bind**: Bind later with bound context
 
 ---
@@ -51,7 +51,7 @@
 ---
 
 ## 4. Event Loop
-
+event loop checks if the call stack is empty and then pushes tasks from the callback queue into the stack for execution.
 ### Components:
 1. **Call Stack**: Function execution (LIFO)
 2. **Heap**: Memory allocation
