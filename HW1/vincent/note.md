@@ -6,7 +6,7 @@
 
 ## 2. What is the minimal structure of an HTML5 document?
 
-**Answer:**
+**Answer:** An HTML file begins with the <html> tag, which contains the entire structure of the page. Inside it, the <head> tag holds metadata such as the title, styles, scripts, and other information primarily for search engines and the browser, not directly visible to users. Following that, the <body> tag contains the main content of the webpage, which is displayed to the users.
 
 ```html
 <!DOCTYPE html>
@@ -54,7 +54,9 @@
 <a href="http://example.com/sample_page/" rel="noreferrer nofollow">Link</a>
 ```
 
-**Answer:** This is an anchor tag that contains a URL for redirecting to another page. The `rel="noreferrer nofollow"` attributes prevent the new opened page from manipulating the original page's JavaScript files and hide information about where the user came from.
+**Answer:** This is an anchor tag that contains a URL for redirecting to another page. The `rel="noreferrer nofollow"` actually combines two separate behavior:
+- noreferrer: prevents the new page from accessing the referrer information (i.e., it worn't know which site the user came from) and also stops it from manipulating the original page's JavaScript contenxt.
+- nofollow: instructs search engines not to follow the link for SEO pruposes and ensures that no ranking values is passed to the target page.
 
 ## 7. How do you serve your page in multiple languages?
 
