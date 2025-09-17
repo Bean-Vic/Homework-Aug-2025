@@ -30,7 +30,7 @@ The `addEventListener()` method is generally preferred as it allows multiple han
 
 ## 5. Explain event delegation. Why is it important?
 
-**Answer:** Event delegation is a technique where you attach a single event listener to a parent element and handle events for its children using `event.target`.
+**Answer:** Event delegation is a technique where you attach a single event listener to a parent element and handle events for its children using `event.target`. It relied on event bubbling where events propagate from the target element up through its ancestors
 
 **Why it's important:**
 - **Efficiency:** Fewer event listeners compared to adding them directly to each child element

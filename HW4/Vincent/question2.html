@@ -34,11 +34,11 @@
     padding: 16px 0px 16px 16px;
     margin: 0 24px 24px 24px;
     background: #fff;
-    display: none;
   }
 
-  #london {
-    display: block;
+  /* Hide panels using the hidden attribute */
+  [hidden] {
+    display: none;
   }
 
   /* Minor typography to match screenshot feel */
@@ -60,11 +60,11 @@
     <h2>London</h2>
     <p>London is the capital city of England.</p>
   </div>
-  <div id="paris">
+  <div id="paris" hidden>
     <h2>Paris</h2>
     <p>Paris is the capital of France.</p>
   </div>
-  <div id="tokyo">
+  <div id="tokyo" hidden>
     <h2>Tokyo</h2>
     <p>Tokyo is the capital of Japan.</p>
   </div>
@@ -77,7 +77,7 @@
     // Initialize: hide all panels except London
     panels.forEach(panel => {
       if (panel.id !== 'london') {
-        panel.style.display = 'none';
+        panel.hidden = true;
       }
     });
 
@@ -95,11 +95,11 @@
 
         // Hide all panels
         panels.forEach(panel => {
-          panel.style.display = 'none';
+          panel.hidden = true;
         });
 
         // Show the selected panel
-        document.getElementById(targetId).style.display = 'block';
+        document.getElementById(targetId).hidden = false;
       }
     });
   </script>
