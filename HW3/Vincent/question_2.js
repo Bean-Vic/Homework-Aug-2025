@@ -5,7 +5,16 @@ function remove_non_alphabet(complex_string) {
     const string_alphabet = complex_string.replace(/[^a-zA-Z ]/g, "");
     const string_no_extra_space = string_alphabet.replace(/\s+/g, " ").trim();
     const string_lowercase = string_no_extra_space.toLowerCase();
+
+    const alternatvie_stirng_lowercase = complex_string
+        .replace(/[^a-zA-Z ]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
     return string_lowercase
+
+
 }
 
 console.log(remove_non_alphabet(string));

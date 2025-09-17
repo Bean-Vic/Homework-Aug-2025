@@ -18,6 +18,10 @@ function filter_qp(array_object) {
         item.quantity > 2 && item.price > 300
     );
 
+    const alternative_filtered_array = array_object.filter(
+        ({ quantity, price }) => quantity > 2 && price > 300
+    );
+
     return filtered_array;
 }
 

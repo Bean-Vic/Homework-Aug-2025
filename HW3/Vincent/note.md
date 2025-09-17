@@ -7,9 +7,9 @@
 ## Question 2: Explain the difference between var, let, & const.
 
 **Answer:**
-- **var**: Function-scoped, hoisted and initialized to undefined, allows re-declaration in the same scope; ignores block scope.
-- **let**: Block-scoped, hoisted but in the TDZ (temporal dead zone) until declaration; no re-declaration in same scope.
-- **const**: Like let but must be initialized and cannot be reassigned (note: the object it points to can still be mutated).
+- **var**: Function-scoped, hoisted and initialized to undefined, Can be redeclared and reassigned i the same scope. Ignores block scope.
+- **let**: Block-scoped, hoisted but not initialized (in the Temporal Dead Zone). Accesing before declaration throws a ReferenceError. Can be reassigned but not redeclared in the same scope.
+- **const**: Block-scoped, hoisted but not initialized (also in the TDZ). Must be initialized at declaration and cannot be reassigned. However, the object or array it references can still be mutated.
 
 ## Question 3: What is immutability? What data types in JS are immutable?
 
@@ -64,7 +64,7 @@ const add2 = (a, b) => { return a + b; };
 
 ## Question 9: What is a callback function?
 
-**Answer:** A function you pass as an argument to be invoked later (after an event, timer, async completion, etc.). Many JS APIs use them.
+**Answer:** A callback function is a function passed as an argument to another function, which then decides when to invoke it, either immeditately (synchronously, e.g., forEach) or later (asynchronously, e.g., setTimeout, fetch)
 
 ```js
 setTimeout(() => console.log("done"), 1000);
