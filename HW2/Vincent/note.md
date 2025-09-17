@@ -14,9 +14,9 @@ Use the `<link>` tag inside the `<head>`:
 
 ## 3. What is block element? How is it different from inline, and inline-block elements?
 
-- **Block**: Takes the full width available and starts on a new line (e.g., `<div>`, `<p>`)
-- **Inline**: Only takes as much width as needed, does not start on a new line (e.g., `<span>`, `<a>`)
-- **Inline-block**: Behaves like inline (stays in line), but can have width/height like block elements
+- **Block**: Takes the full width available and starts on a new line (e.g., `<div>`, `<p>`); Can set width, height, and margins(all sides).
+- **Inline**: Only takes as much width as needed, does not start on a new line (e.g., `<span>`, `<a>`); cannot set width or height; vertical margins/padding generally don't apply.
+- **Inline-block**: Behaves like inline (stays in line), but can have width/height like block elements; can set width, height, and margins(all sides).
 
 ## 4. What is the difference between pseudo-class and pseudo-element?
 
@@ -62,13 +62,14 @@ Controls the stacking order of elements along the z-axis. Higher z-index = eleme
 
 ## 11. How do you center a block element with CSS?
 
-Using flexbox:
+Using flexbox: vertical centering only works if the container has a defined height.
 
 ```css
 .container {
   display: flex;              /* enable flexbox */
   justify-content: center;    /* center horizontally */
   align-items: center;        /* center vertically */
+  height:100vh;               /* ensure container has height for vertical centering */
 }
 ```
 
