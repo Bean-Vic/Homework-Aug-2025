@@ -5,12 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Flexbox vs Grid Layout Comparison</title>
         <style>
-            .layout-section {
-                border: 3px solid #2c3e50;
+            /* Container for all layout sections */
+            .sections-container {
+                display: flex;
+                flex-direction: column;
+                gap: 50px; /* Clean spacing between sections */
             }
 
-            .layout-section + .layout-section {
-                margin-top: 50px;
+            .layout-section {
+                border: 3px solid #2c3e50;
             }
 
             /* SHARED STYLES FOR ALL SEMANTIC ELEMENTS */
@@ -107,7 +110,7 @@
     <body>
         <h1>Flexbox vs CSS Grid Layout Comparison</h1>
 
-        <div>
+        <div class="sections-container">
             <!-- FLEXBOX VERSION -->
             <section class="layout-section">
                 <h2>Flexbox Layout</h2>
