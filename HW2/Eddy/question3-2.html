@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Name Card</title>
+    <style>
+      body {
+        background-color: #f0f2f5;
+        font-family: sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        max-width: 600px;
+      }
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .avatar:hover {
+        transform: scale(1.1);
+      }
+
+      .text-container {
+        flex-grow: 1;
+        text-align: left;
+      }
+
+      .name {
+        font-size: 1.5em;
+        margin-top: 0;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .title {
+        color: #555;
+        margin-top: 0;
+      }
+
+      .follow-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      .follow-button:hover {
+        background-color: #0056b3;
+      }
+
+      @media (max-width: 768px) {
+        .card {
+          flex-direction: column;
+          text-align: center;
+        }
+        .text-container {
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img class="avatar" src="https://i.pravatar.cc/80" alt="Avatar" />
+      <div class="text-container">
+        <div class="name">Jane Doe</div>
+        <div class="title">Front-end Engineer</div>
+      </div>
+      <button class="follow-button">Follow</button>
+    </div>
+  </body>
+</html>
