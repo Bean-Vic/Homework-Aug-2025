@@ -5,3 +5,4 @@
 5. Explain how to use `connect()`
 6. What is `mapDispatchToProps` and what does it do?
 7. What is `mapStateToProps` and what does it do?
+   git
