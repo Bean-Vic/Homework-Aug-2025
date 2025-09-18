@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Layout</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: sans-serif;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-areas:
+          "header header header"
+          "nav article aside"
+          "footer footer footer";
+        grid-template-columns: 200px 1fr 200px;
+        grid-template-rows: auto 1fr auto;
+        min-height: 100vh;
+      }
+
+      .header {
+        grid-area: header;
+        background-color: #a4d26b;
+        padding: 20px;
+      }
+
+      .nav {
+        grid-area: nav;
+        background-color: #f0f4e6;
+        padding: 20px;
+      }
+
+      .article {
+        grid-area: article;
+        background-color: #ffffff;
+        padding: 20px;
+      }
+
+      .aside {
+        grid-area: aside;
+        background-color: #f0f4e6;
+        padding: 20px;
+      }
+
+      .footer {
+        grid-area: footer;
+        background-color: #f3dd11;
+        padding: 20px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-container">
+      <header class="header">Header</header>
+      <nav class="nav">Nav</nav>
+      <article class="article">Article</article>
+      <aside class="aside">Aside</aside>
+      <footer class="footer">Footer</footer>
+    </div>
+  </body>
+</html>
