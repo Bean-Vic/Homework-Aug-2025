@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Todo List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  :root{--b:#e5e7eb;--g:#f7f7f7;--tx:#111827;--mut:#6b7280}
+  *{box-sizing:border-box}
+  body{font-family:Arial,Helvetica,sans-serif;color:var(--tx);margin:0;padding:32px;background:#fff}
+  .wrap{max-width:720px;margin:0 auto;display:grid;gap:20px}
+  .card{border:1px solid var(--b);border-radius:12px;background:var(--g);padding:18px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input,button,select{height:36px;border:1px solid var(--b);border-radius:8px;background:#fff;padding:0 10px}
+  button{background:#eee;cursor:pointer}
+  button:disabled{opacity:.6;cursor:not-allowed}
+  .list{display:grid;gap:8px;margin-top:10px}
+  .item{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;background:#fff;border:1px solid var(--b);border-radius:8px;padding:10px}
+  .txt.done{text-decoration:line-through;opacity:.6}
+  .err{color:#b91c1c}
+  .mut{color:var(--mut)}
+  .filters{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:8px}
+  .btns{display:flex;gap:6px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo,useEffect}=React
+function App(){
+  const gid=()=> Math.random().toString(36).slice(2)+Date.now()
+  const load=()=>{const s=localStorage.getItem("todo-list");return s?JSON.parse(s):[]}
+  const [todos,setTodos]=useState(load)
+  const [input,setInput]=useState("")
+  const [eid,setEid]=useState("")
+  const [edit,setEdit]=useState("")
+  const [filter,setFilter]=useState("all")
+  useEffect(()=>{localStorage.setItem("todo-list",JSON.stringify(todos))},[todos])
+  const add=()=>{
+    const t=input.trim()
+    if(!t)return
+    const n={id:gid(),text:t,completed:false}
+    setTodos([n,...todos])
+    setInput("")
+  }
+  const keyAdd=e=>{if(e.key==="Enter")add()}
+  const del=id=>{
+    setTodos(todos.filter(x=>x.id!==id))
+    if(eid===id){setEid("");setEdit("")}
+  }
+  const toggle=id=>{
+    setTodos(todos.map(x=>x.id===id?{...x,completed:!x.completed}:x))
+  }
+  const start=id=>{
+    const it=todos.find(x=>x.id===id)
+    if(!it)return
+    setEid(id)
+    setEdit(it.text)
+  }
+  const save=()=>{
+    const t=edit.trim()
+    if(!t)return
+    setTodos(todos.map(x=>x.id===eid?{...x,text:t}:x))
+    setEid("")
+    setEdit("")
+  }
+  const cancel=()=>{setEid("");setEdit("")}
+  const keyEdit=e=>{if(e.key==="Enter")save();if(e.key==="Escape")cancel()}
+  const list=useMemo(()=>{
+    if(filter==="active")return todos.filter(x=>!x.completed)
+    if(filter==="completed")return todos.filter(x=>x.completed)
+    return todos
+  },[todos,filter])
+  const left=useMemo(()=>todos.filter(x=>!x.completed).length,[todos])
+  const ok=input.trim().length>0
+  return(
+    <div className="wrap">
+      <div className="card">
+        <h2>Todo List</h2>
+        <div className="row">
+          <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={keyAdd} placeholder="Add a todo"/>
+          <button onClick={add} disabled={!ok}>Add</button>
+        </div>
+        <div className="filters">
+          <div className="btns">
+            <button onClick={()=>setFilter("all")} disabled={filter==="all"}>All</button>
+            <button onClick={()=>setFilter("active")} disabled={filter==="active"}>Active</button>
+            <button onClick={()=>setFilter("completed")} disabled={filter==="completed"}>Completed</button>
+          </div>
+          <div className="mut">{left} items left</div>
+        </div>
+        <div className="list">
+          {list.length===0?<div className="mut">No items</div>:list.map(x=>(
+            <div className="item" key={x.id}>
+              <input type="checkbox" checked={x.completed} onChange={()=>toggle(x.id)}/>
+              {eid===x.id?(
+                <input value={edit} onChange={e=>setEdit(e.target.value)} onKeyDown={keyEdit} autoFocus/>
+              ):(
+                <div className={"txt"+(x.completed?" done":"")}>{x.text}</div>
+              )}
+              {eid===x.id?(
+                <div className="btns">
+                  <button onClick={save}>Save</button>
+                  <button onClick={cancel}>Cancel</button>
+                </div>
+              ):(
+                <div className="btns">
+                  <button onClick={()=>start(x.id)}>Edit</button>
+                  <button onClick={()=>del(x.id)}>Delete</button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+const root=ReactDOM.createRoot(document.getElementById("root"))
+root.render(<App/>)
+</script>
+</body>
+</html>
