@@ -1,14 +1,19 @@
-export default function TodoList({ completedTodos, activeTodos }) {
+import { useSelector } from "react-redux";
+import NewTodoForm from "./NewTodoForm";
+import TodoListItem from "./TodoListItem";
+
+export default function TodoList({}) {
+  const todos = useSelector((state) => state.todos.value); //exact part of redux store
   return (
     <div>
       <h1>My todos</h1>
-      <p>new todo</p>
+      <NewTodoForm />
       <h3>InCompleted</h3>
-      {completedTodos.map((todo, index) => (
+      {todos.map((todo, index) => (
         <TodoListItem todo={todo} key={index} />
       ))}
       <h3>Completed</h3>
-      {inCompleteTodos.map((todo, index) => (
+      {todos.map((todo, index) => (
         <TodoListItem todo={todo} key={index} />
       ))}
     </div>
