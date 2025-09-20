@@ -1,6 +1,5 @@
-import Image from "next/image";
-import { Code1, Code1WithStorage } from "@/components/code1_component";
-import ShoppingCart from "@/components/code2_component";
+import { Code1, Code1WithStorage } from "./components/code1_component";
+import ShoppingCart from "./components/code2_component";
 
 export default function Home() {
   return (

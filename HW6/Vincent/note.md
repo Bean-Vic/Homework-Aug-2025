@@ -10,7 +10,7 @@
 
 ## 2. What is JSX?
 
-**Answer:** JavaScript XML (JSX) is a syntax extension for JavaScript that looks like HTML but compiles to `React.createElement()` calls. JSX makes UI code more declarative and readable while still being JavaScript underneath. Key benefits include:
+**Answer:** JavaScript XML (JSX) is a syntax extension for JavaScript that looks like HTML but compiles to `React.createElement()` calls. It is essentially syntax sugar that makes writing React components more concise and readable by abstracting away the verbose function calls. Without JSX, developers would have to manually call React.createElement() for every element, which quickly becomes cumbersome for complex UIs. Key benefits include:
 - Familiar HTML-like syntax for developers
 - Type checking and compile-time error detection
 - Ability to embed JavaScript expressions using curly braces `{}`
@@ -58,7 +58,7 @@
 
 ## 8. What is the difference between a controlled component and uncontrolled component?
 
-**Answer:** Both refer to how form inputs are managed:
+**Answer:** Controlled and uncontrolled components describe two ways of handling form inputs in React — the key difference is whether the input value is managed by React state or left to the DOM.
 
 **Controlled Component:**
 - Input value is controlled by React state

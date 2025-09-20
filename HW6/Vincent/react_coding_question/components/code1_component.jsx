@@ -1,24 +1,35 @@
 "use client"
 
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export const Code1 = ({ init_vale }) => {
-    const [Value, setValue] = useState(init_vale || 0);
+export const Code1 = ({ init_vale, onChange}) => {
+    const [value, setValue] = useState(init_vale || 0);
+
+    useEffect(() => {
+        setValue(init_vale ?? 0);
+    }, [init_vale]);
 
     function increase() {
-        setValue(prev => prev + 1);
+        setValue(prev => {
+            const v = prev + 1;
+            onChange?.(v);
+            return v;
+        });
     }
 
     function decrease() {
-        setValue(prev => prev - 1);
+        setValue(prev => {
+            const v = prev - 1;
+            onChange?.(v);
+            return v;
+        });
     }
 
     return (
     <>
         <div className="flex flex-col items-center space-y-4 p-6 bg-white rounded-lg shadow-lg border border-gray-200 max-w-sm mx-auto">
             <div className="text-2xl font-bold text-gray-800 mb-2">
-                Counter Value: <span className="text-blue-600">{Value}</span>
+                Counter Value: <span className="text-blue-600">{value}</span>
             </div>
             <div className="flex space-x-4">
                 <button
@@ -38,16 +49,8 @@ export const Code1 = ({ init_vale }) => {
     </>);
 };
 
-const withLocalStorage = (WrappedComponent) => {
-    return class extends React.Component {
-        constructor(props) {
-            super(props);
-            this.state = {
-                init_vale: 0,
-                currentValue: 0,
-                isLoaded: false
-            };
-        }
+const withLocalStorage = (WrappedComponent) => class extends React.Component {
+        state = { init_vale: 0, isLoaded: false };
 
         componentDidMount() {
             // Load saved value from localStorage after component mounts (client-side only)
@@ -56,7 +59,6 @@ const withLocalStorage = (WrappedComponent) => {
                 const savedValue = local_saved ? parseInt(local_saved, 10) : 0;
                 this.setState({
                     init_vale: savedValue,
-                    currentValue: savedValue,
                     isLoaded: true
                 });
             } else {
@@ -64,36 +66,13 @@ const withLocalStorage = (WrappedComponent) => {
             }
         }
 
-        handleClick = (event) => {
-            const buttonText = event.target.textContent;
-            if (buttonText === '+') {
-                this.setState(prevState => {
-                    const newValue = prevState.currentValue + 1;
-                    // Save to localStorage immediately when value changes
-                    if (typeof window !== 'undefined') {
-                        localStorage.setItem("code1_counter", newValue.toString());
-                    }
-                    return { currentValue: newValue };
-                });
-            } else if (buttonText === '-') {
-                this.setState(prevState => {
-                    const newValue = prevState.currentValue - 1;
-                    // Save to localStorage immediately when value changes
-                    if (typeof window !== 'undefined') {
-                        localStorage.setItem("code1_counter", newValue.toString());
-                    }
-                    return { currentValue: newValue };
-                });
-            }
-        }
-
-        componentWillUnmount() {
-            // Save current value to localStorage when component unmounts (client-side only)
+        handleChange = (newValue) => {
             if (typeof window !== 'undefined') {
-                localStorage.setItem("code1_counter", this.state.currentValue.toString());
+                localStorage.setItem("code1_counter", String(newValue));
             }
-        }
 
+            this.setState({ init_vale:newValue });
+        }
         render() {
             // Show loading until localStorage is loaded
             if (!this.state.isLoaded) {
@@ -112,17 +91,15 @@ const withLocalStorage = (WrappedComponent) => {
                     <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-lg">
                         💾 Saved
                     </div>
-                    <div onClick={this.handleClick}>
-                        <WrappedComponent
-                            {...this.props}
-                            init_vale={this.state.init_vale}
-                        />
-                    </div>
+                    <WrappedComponent
+                        {...this.props}
+                        init_vale={this.state.init_vale}
+                        onChange={this.handleChange}
+                    />
                 </div>
             </>);
         }
     }
-}
 
 // Create the enhanced component
 export const Code1WithStorage = withLocalStorage(Code1);
