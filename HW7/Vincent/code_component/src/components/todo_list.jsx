@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useRef } from "react";
 
 // Reducer function for managing todos with object-based structure
 function todosReducer(state, action) {
@@ -62,6 +62,7 @@ const useTodos = () => {
     const [filter, setFilter] = useState("All"); // All, Active, Completed
     const [editingId, setEditingId] = useState(null);
     const [editingText, setEditingText] = useState("");
+    const initRef = useRef(false);
 
     useEffect(() => {
         const savedTodos = localStorage.getItem("todo-list");
@@ -83,6 +84,10 @@ const useTodos = () => {
     }, []);
 
     useEffect(() => {
+        if (!initRef.current) {
+            initRef.current = true;
+            return;
+        }
         localStorage.setItem("todo-list", JSON.stringify(todos));
     }, [todos]);
 
