@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Substring</title>
+</head>
+<body>
+    <h1>Longest Substring Without Repeating Characters</h1>
+    <input type="text" id="inputString" placeholder="Enter a string">
+    <button id="submitBtn">Submit</button>
+    <p>Output: <span id="result"></span></p>
+
+    <script>
+        const inputElement = document.getElementById("inputString");
+        const submitButton = document.getElementById("submitBtn");
+        const resultSpan = document.getElementById("result");
+
+        const lengthOfLongestSubstring = (s) => {
+            let maxLength = 0;
+            let start = 0;
+            const charMap = {};
+
+            for (let end = 0; end < s.length; end++) {
+                const char = s[end];
+                if (charMap[char] !== undefined && charMap[char] >= start) {
+                    start = charMap[char] + 1;
+                }
+                charMap[char] = end;
+                maxLength = Math.max(maxLength, end - start + 1);
+            }
+            return maxLength;
+        };
+
+        submitButton.addEventListener("click", () => {
+            const userInput = inputElement.value;
+            const output = lengthOfLongestSubstring(userInput);
+            resultSpan.textContent = output;
+        });
+    </script>
+</body>
+</html>
