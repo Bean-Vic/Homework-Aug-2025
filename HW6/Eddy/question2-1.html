@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Class Component</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;margin:40px}
+  .box{display:inline-flex;gap:12px;align-items:center;border:1px solid #e5e7eb;border-radius:10px;padding:12px 16px}
+  .num{min-width:48px;text-align:center;font-size:20px}
+  button{height:34px;padding:0 12px;border:1px solid #c7c7c7;border-radius:6px;background:#eee;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+class Counter extends React.Component{
+  constructor(p){super(p);this.state={val:Number.isFinite(p.init)?p.init:0}}
+  inc=()=>this.setState(s=>{const v=s.val+1;this.props.onChange&&this.props.onChange(v);return{val:v}})
+  dec=()=>this.setState(s=>{const v=s.val-1;this.props.onChange&&this.props.onChange(v);return{val:v}})
+  render(){return(<div className="box"><button onClick={this.dec}>-</button><div className="num">{this.state.val}</div><button onClick={this.inc}>+</button></div>)}
+}
+function withStore(Wrapped,key='val'){
+  return class extends React.Component{
+    getInit(){const x=Number(localStorage.getItem(key));return Number.isFinite(x)?x:(Number.isFinite(this.props.init)?this.props.init:0)}
+    setInit=v=>localStorage.setItem(key,String(v))
+    render(){return <Wrapped init={this.getInit()} onChange={this.setInit} /> }
+  }
+}
+const SavedCounter=withStore(Counter,'hw6_q1_val')
+const root=ReactDOM.createRoot(document.getElementById('root'))
+root.render(<SavedCounter init={0} />)
+</script>
+</body>
+</html>
