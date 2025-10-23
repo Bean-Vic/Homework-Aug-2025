@@ -1,41 +1,50 @@
-import React from "react";
 
-class Counter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: props.initialValue || 0,
-    };
-  }
 
-  increment = () => {
-    this.setState((prev) => ({ value: prev.value + 1 }), () => {
-      if (this.props.onValueChange) {
-        this.props.onValueChange(this.state.value);
-      }
-    });
-  };
+// export default function Counter({ value, onChange }) {
+//   const handleIncrease = () => onChange(value + 1);
+//   const handleDecrease = () => onChange(value - 1);
 
-  decrement = () => {
-    this.setState((prev) => ({ value: prev.value - 1 }), () => {
-      if (this.props.onValueChange) {
-        this.props.onValueChange(this.state.value);
-      }
-    });
-  };
+//   return (
+//     <div>
+//       <h2>Count: {value}</h2>
+//       <button onClick={handleDecrease}>-</button>
+//       <button onClick={handleIncrease}>+</button>
+//     </div>
+//   );
+// }
+import { useState } from "react";
 
-  render() {
-    return (
-      <div>
-        <h2>Counter</h2>
-        <p style={{ fontSize: "24px" }}>{this.state.value}</p>
-        <div>
-          <button onClick={this.decrement}>-1</button>
-          <button onClick={this.increment}>+1</button>
-        </div>
-      </div>
-    );
-  }
+// export default function Counter({ initialValue = 0 }) {
+//   // 组件内部管理自己的状态
+//   const [count, setCount] = useState(initialValue);
+
+//   // 处理加减操作
+//   const handleIncrease = () => setCount(count + 1);
+//   const handleDecrease = () => setCount(count - 1);
+
+//   // 在页面上渲染当前状态
+//   return (
+//     <div>
+//       <h2>Count: {count}</h2>
+//       <button onClick={handleDecrease}>-</button>
+//       <button onClick={handleIncrease}>+</button>
+//     </div>
+//   );
+// }
+
+export default function Counter({initialValue = 0}) {
+  const [count, setCount]=useState(initialValue);
+
+  const handleIncrease = ()=>setCount(count+1)
+  const handleDecrease = ()=>setCount(count-1)
+
+  return (
+
+    <div>
+    <p>Simple Counter</p>
+    <h2>Count: {count}</h2>
+    <button onClick={handleIncrease}>+</button>
+    <button onClick={handleDecrease}>-</button>
+    </div>
+  )
 }
-
-export default Counter;

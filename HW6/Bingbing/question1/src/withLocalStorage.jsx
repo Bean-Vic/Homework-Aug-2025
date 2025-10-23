@@ -1,27 +1,24 @@
-import React, { useState } from "react";
 
-function withLocalStorage(WrappedComponent, storageKey = "counterValue") {
-  return function WithLocalStorage(props) {
-    // 从 localStorage 或 props 初始化
-    const [value, setValue] = useState(() => {
-      const saved = localStorage.getItem(storageKey);
-      return saved ? JSON.parse(saved) : props.initialValue;
-    });
+// import { useState, useEffect } from "react";
 
-    // 统一更新 state 和 localStorage
-    const handleValueChange = (newValue) => {
-      setValue(newValue); // 更新内部 state
-      localStorage.setItem(storageKey, JSON.stringify(newValue));
-    };
+// export default function withLocalStorage(WrappedComponent, key, defaultValue = 0) {
+//   return function WithLocalStorageWrapper(props) {
+//     const [value, setValue] = useState(() => {
+//       const cached = localStorage.getItem(key);
+//       return cached !== null ? Number(cached) : defaultValue;
+//     });
 
-    return (
-      <WrappedComponent
-        {...props}
-        initialValue={value}
-        onValueChange={handleValueChange}
-      />
-    );
-  };
-}
+//     // 每当 value 改变时写入 localStorage
+//     useEffect(() => {
+//       localStorage.setItem(key, value);
+//     }, [key, value]);
 
-export default withLocalStorage;
+//     return (
+//       <WrappedComponent
+//         {...props}
+//         value={value}
+//         onChange={setValue}
+//       />
+//     );
+//   };
+// }
