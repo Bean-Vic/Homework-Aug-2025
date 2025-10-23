@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSONPlaceholder Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>JSONPlaceholder Demo</h1>
+    <!-- Part 1 -->
+    <section id="part1">
+      <h2>Part 1: Users Table</h2>
+      <button id="loadUsersBtn">Load Users</button>
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>City</th>
+            <th>Company</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p id="usersError" class="error"></p>
+    </section>
+
+    <!-- Part 2 -->
+    <section id="part2">
+      <h2>Part 2: User Search</h2>
+      <input type="text" id="userIdInput" placeholder="Enter User ID" />
+      <button id="searchBtn">Search</button>
+      <p id="searchError" class="error"></p>
+
+      <h3>User Info</h3>
+      <ul id="userInfo"></ul>
+
+      <h3>User Posts</h3>
+      <ul id="userPosts"></ul>
+
+      <h3>User Todos</h3>
+      <ul id="userTodos"></ul>
+    </section>
+
+    <!-- Part 3 -->
+    <section id="part3">
+      <h2>Part 3: Delayed Request</h2>
+      <button id="delayedBtn">Send Delayed Request</button>
+      <p id="delayedMessage"></p>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>
