@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flexbox Layout</title>
+    <style>
+      * {
+        color: gray;
+      }
+      body {
+        margin: 0;
+      }
+
+      header {
+        background: yellowgreen;
+        padding-left: 20px;
+        padding-top: 20px;
+        padding-bottom: 80px;
+      }
+
+      main {
+        display: flex;
+        min-height: 300px;
+      }
+
+      nav {
+        background: beige;
+        flex: 1;
+        padding: 20px;
+      }
+
+      article {
+        flex: 3;
+        padding: 20px;
+      }
+
+      aside {
+        background: beige;
+        flex: 1;
+        padding: 20px;
+      }
+
+      footer {
+        background: yellow;
+        padding-left: 20px;
+        padding-top: 20px;
+        padding-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>Header</header>
+    <main>
+      <nav>Nav</nav>
+      <article>Article</article>
+      <aside>Aside</aside>
+    </main>
+    <footer>Footer</footer>
+  </body>
+</html>

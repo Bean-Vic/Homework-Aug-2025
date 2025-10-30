@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Layout</title>
+    <style>
+              * {
+        color: gray;
+      }
+      body {
+        margin: 0;
+        display: grid;
+        grid-template-areas:
+          "header"
+          "main"
+          "footer";
+        grid-template-rows: auto 1fr auto;
+        /* min-height: 100vh; 页面至少占满全屏 */
+      }
+
+      header {
+        grid-area: header;
+        background: yellowgreen;
+        padding-left: 20px;
+        padding-top: 20px;
+        padding-bottom: 80px;
+      }
+
+      main {
+        grid-area: main;
+        display: grid;
+        grid-template-areas: "nav article aside";
+        grid-template-columns: 1fr 3fr 1fr; /* 左右窄，中间宽 */
+        min-height: 300px;
+        /* padding: 10px; */
+      }
+
+      nav {
+        grid-area: nav;
+        background: beige;
+        padding: 20px;
+      }
+
+      article {
+        grid-area: article;
+        background: white;
+        padding: 20px;
+      }
+
+      aside {
+        grid-area: aside;
+        background: beige;
+        padding: 20px;
+      }
+
+      footer {
+        grid-area: footer;
+        background: yellow;
+        padding-left: 20px;
+        padding-top: 20px;
+        padding-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>Header</header>
+    <main>
+      <nav>Nav</nav>
+      <article>Article</article>
+      <aside>Aside</aside>
+    </main>
+    <footer>Footer</footer>
+  </body>
+</html>
