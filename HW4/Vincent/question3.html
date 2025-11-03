@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>LSWRC Finder</title>
+</head>
+<body>
+    <div>
+        <h2>Longest Substring Without Repeating Characters</h2>
+        <input type="text" id="inputString" placeholder="Enter any string...">
+        <button onclick="findAndDisplayLSWRC()">Find LSWRC</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function findLSWRC(input_string) {
+            if (!input_string) return 0;
+
+            let maxLength = 0;
+            let currentSubstring = "";
+            let longestSubstring = "";
+
+            for (let char of input_string) {
+                if (currentSubstring.includes(char)) {
+                    let duplicateIndex = currentSubstring.indexOf(char);
+                    currentSubstring = currentSubstring.slice(duplicateIndex + 1);
+                }
+                currentSubstring += char;
+
+                if (currentSubstring.length > maxLength) {
+                    maxLength = currentSubstring.length;
+                    longestSubstring = currentSubstring;
+                }
+            }
+
+            return { length: maxLength, substring: longestSubstring };
+        }
+
+        function findAndDisplayLSWRC() {
+            const inputElement = document.getElementById('inputString');
+            const resultElement = document.getElementById('result');
+            const inputString = inputElement.value;
+
+            if (!inputString.trim()) {
+                resultElement.innerHTML = '<p style="color: red;">Please enter a string!</p>';
+                return;
+            }
+
+            const result = findLSWRC(inputString);
+
+            resultElement.innerHTML = `
+                <h3>Result:</h3>
+                <p><strong>Input:</strong> "${inputString}"</p>
+                <p><strong>Longest Substring Without Repeating Characters:</strong> "${result.substring}"</p>
+                <p><strong>Length:</strong> ${result.length}</p>
+            `;
+        }
+
+        // Allow Enter key to trigger the search
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('inputString').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    findAndDisplayLSWRC();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
