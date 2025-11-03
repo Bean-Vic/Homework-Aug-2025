@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Part 2 — search Users</title>
+</head>
+<body>
+    <section class="card">
+        <h2>Part 2</h2>
+
+        <div class="toolbar">
+            <input id="userId" type="text" placeholder="Enter User ID" inputmode="numeric" />
+            <button id="searchBtn" type="button">Search</button>
+        </div>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+
+        <div class="grid">
+            <section>
+                <h3>User Info</h3>
+                <ul id="userInfo"><li class="muted">No data</li></ul>
+            </section>
+            <section>
+                <h3>User Posts</h3>
+                <ul id="userPosts"><li class="muted">No data</li></ul>
+            </section>
+            <section>
+                <h3>User Todos</h3>
+                <ul id="userTodos"><li class="muted">No data</li></ul>
+            </section>
+        </div>
+    </div>
+    </section>
+    <script>
+        const $ = sel => document.querySelector(sel);
+        const input = $('#userId');
+        const btn = $('#searchBtn');
+        const statusEl = $('#status');
+        const userInfo = $('#userInfo');
+        const userPosts = $('#userPosts');
+        const userTodos = $('#userTodos');
+
+        const API = 'https://jsonplaceholder.typicode.com';
+
+        async function getJson(url, { signal } = {}) {
+            const res = await fetch(url, { signal });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const data = await res.json();
+            return data;
+        }
+
+        // renderers
+        function renderUser(u) {
+            if (!u || !u.id) { userInfo.innerHTML = `<li class="muted">No data</li>`; return; }
+            userInfo.innerHTML = '';
+            userInfo.append(item('User'));
+            userInfo.append(kv('ID', u.id));
+            userInfo.append(kv('Name', u.name));
+            userInfo.append(kv('Username', u.username));
+            userInfo.append(kv('Email', u.email));
+            userInfo.append(kv('City', u.address?.city));
+            userInfo.append(kv('Company', u.company?.name));
+            userInfo.append(kv('Website', u.website));
+        }
+
+        function renderPosts(posts) {
+            userPosts.innerHTML = '';
+            userPosts.append(item('Posts'));
+            if (!Array.isArray(posts) || posts.length === 0) {
+            userPosts.append(item('No posts', 'muted'));
+            return;
+            }
+            posts.forEach(p => userPosts.append(kv(`Post ${p.id}`, p.title)));
+        }
+
+        function renderTodos(todos) {
+            userTodos.innerHTML = '';
+            userTodos.append(item('Todos'));
+            if (!Array.isArray(todos) || todos.length === 0) {
+            userTodos.append(item('No todos', 'muted'));
+            return;
+            }
+            todos.forEach(t => userTodos.append(kv(`Todo ${t.id}`, `${t.title} (completed: ${t.completed})`)));
+        }
+
+        // small DOM helpers
+        function item(text, cls) {
+            const li = document.createElement('li');
+            li.textContent = text;
+            if (cls) li.className = cls;
+            return li;
+        }
+
+        function kv(k, v) {
+            const li = document.createElement('li');
+            li.textContent = `${k}: ${v ?? ''}`;
+            return li;
+        }
+
+        async function search() {
+            const id = input.value.trim();
+            statusEl.textContent = '';
+            statusEl.classList.remove('error');
+
+            if (!id) {
+                statusEl.textContent = 'Please enter a user ID.';
+                return;
+            }
+
+            // UI: loading state
+            btn.disabled = true;
+            btn.textContent = 'Searching…';
+            statusEl.textContent = 'Loading…';
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s
+
+            try {
+                const userUrl  = `${API}/users/${encodeURIComponent(id)}`;
+                const postsUrl = `${API}/posts?userId=${encodeURIComponent(id)}`;
+                const todosUrl = `${API}/todos?userId=${encodeURIComponent(id)}`;
+
+                // Run all requests together; each rejects independently
+                const [u, p, t] = await Promise.allSettled([
+                    getJson(userUrl,  { signal: controller.signal }),
+                    getJson(postsUrl, { signal: controller.signal }),
+                    getJson(todosUrl, { signal: controller.signal })
+                ]);
+
+                const user  = u.status === 'fulfilled' ? u.value : null;
+                const posts = p.status === 'fulfilled' ? p.value : [];
+                const todos = t.status === 'fulfilled' ? t.value : [];
+
+                // If user not found (JSONPlaceholder returns {}), show the required error
+                if (!user || !user.id) {
+                    statusEl.textContent = 'User was not found. Please try another user ID';
+                    statusEl.classList.add('error');
+                    input.value = '';               // clear input box
+                    renderUser(null);
+                    renderPosts([]);
+                    renderTodos([]);
+                    return;
+                }
+
+                // Success
+                renderUser(user);
+                renderPosts(posts);
+                renderTodos(todos);
+                statusEl.textContent = `Showing data for user ${user.id}.`;
+            } catch (err) {
+                statusEl.textContent = (err.name === 'AbortError')
+                    ? 'Request timed out.'
+                    : `Something went wrong: ${err.message}`;
+                statusEl.classList.add('error');
+            } finally {
+                clearTimeout(timeoutId);
+                btn.disabled = false;
+                btn.textContent = 'Search';
+            }
+        }
+
+        btn.addEventListener('click', search);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') search();
+        });
+    </script>
+</body>
+</html>

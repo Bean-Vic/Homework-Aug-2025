@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Question 2 - Combined Parts</title>
+    <style>
+        :root {
+            --border: #d7d7d7;
+            --head: #eee;
+            --even: #f7f7f7;
+            --text: #222;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 18px 24px;
+            max-width: 900px;
+            margin: 20px auto;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, .02);
+        }
+
+        .toolbar {
+            margin-bottom: 10px;
+        }
+
+        button {
+            font-size: 13px;
+            padding: 8px 12px;
+            border: 1px solid #bdbdbd;
+            background: #f5f5f5;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: default;
+        }
+
+        input {
+            font-size: 13px;
+            padding: 8px 12px;
+            border: 1px solid #bdbdbd;
+            border-radius: 6px;
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            background: var(--head);
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        tbody td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--even);
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #555;
+            min-height: 1em;
+        }
+
+        .status.error {
+            color: #b3261e;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .grid section {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .grid h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .grid ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .grid li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .grid li:last-child {
+            border-bottom: none;
+        }
+
+        .muted {
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <!-- Part 1: Load Users -->
+    <section class="card">
+        <h2>Part 1 - Load Users</h2>
+
+        <div class="toolbar">
+            <button id="loadBtn" type="button">Load Users</button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 80px">ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th style="width: 200px">City</th>
+            </tr>
+            </thead>
+            <tbody id="usersBody">
+            <!-- rows go here -->
+            </tbody>
+        </table>
+
+        <div id="status1" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- Part 2: Search Users -->
+    <section class="card">
+        <h2>Part 2 - Search Users</h2>
+
+        <div class="toolbar">
+            <input id="userId" type="text" placeholder="Enter User ID" inputmode="numeric" />
+            <button id="searchBtn" type="button">Search</button>
+        </div>
+        <div id="status2" class="status" role="status" aria-live="polite"></div>
+
+        <div class="grid">
+            <section>
+                <h3>User Info</h3>
+                <ul id="userInfo"><li class="muted">No data</li></ul>
+            </section>
+            <section>
+                <h3>User Posts</h3>
+                <ul id="userPosts"><li class="muted">No data</li></ul>
+            </section>
+            <section>
+                <h3>User Todos</h3>
+                <ul id="userTodos"><li class="muted">No data</li></ul>
+            </section>
+        </div>
+    </section>
+
+    <!-- Part 3: Delayed Search -->
+    <section class="card">
+        <h2>Part 3 - Delayed Search Users</h2>
+
+        <div class="toolbar">
+            <button id="delaySearchBtn" type="button">Send Delayed Request</button>
+        </div>
+        <div id="status3" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <script>
+        const API_URL = 'https://jsonplaceholder.typicode.com/users';
+        const API = 'https://jsonplaceholder.typicode.com';
+        const $ = sel => document.querySelector(sel);
+
+        // Part 1: Load Users functionality
+        const loadBtn = document.getElementById('loadBtn');
+        const tbody = document.getElementById('usersBody');
+        const status1El = document.getElementById('status1');
+
+        function addCell(tr, text) {
+            const td = document.createElement('td');
+            td.textContent = text ?? '';
+            tr.appendChild(td);
+        }
+
+        function render(users) {
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                addCell(tr, u.id);
+                addCell(tr, u.name);
+                addCell(tr, u.email);
+                addCell(tr, u.address?.city);
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function loadUsers() {
+            status1El.textContent = 'Loading…';
+            status1El.classList.remove('error');
+            loadBtn.disabled = true;
+            loadBtn.textContent = 'Loading…';
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+            try {
+                const res = await fetch(API_URL, { signal: controller.signal });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error('Unexpected response');
+
+                render(data);
+                status1El.textContent = `Loaded ${data.length} users.`;
+            } catch (err) {
+                status1El.textContent = err.name === 'AbortError'
+                    ? 'Request timed out.'
+                    : `Failed to load users: ${err.message}`;
+                status1El.classList.add('error');
+            } finally {
+                clearTimeout(timeoutId);
+                loadBtn.disabled = false;
+                loadBtn.textContent = 'Load Users';
+            }
+        }
+
+        loadBtn.addEventListener('click', loadUsers);
+
+        // Part 2: Search Users functionality
+        const input = $('#userId');
+        const searchBtn = $('#searchBtn');
+        const status2El = $('#status2');
+        const userInfo = $('#userInfo');
+        const userPosts = $('#userPosts');
+        const userTodos = $('#userTodos');
+
+        async function getJson(url, { signal } = {}) {
+            const res = await fetch(url, { signal });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            return data;
+        }
+
+        // renderers
+        function renderUser(u) {
+            if (!u || !u.id) { userInfo.innerHTML = `<li class="muted">No data</li>`; return; }
+            userInfo.innerHTML = '';
+            userInfo.append(item('User'));
+            userInfo.append(kv('ID', u.id));
+            userInfo.append(kv('Name', u.name));
+            userInfo.append(kv('Username', u.username));
+            userInfo.append(kv('Email', u.email));
+            userInfo.append(kv('City', u.address?.city));
+            userInfo.append(kv('Company', u.company?.name));
+            userInfo.append(kv('Website', u.website));
+        }
+
+        function renderPosts(posts) {
+            userPosts.innerHTML = '';
+            userPosts.append(item('Posts'));
+            if (!Array.isArray(posts) || posts.length === 0) {
+                userPosts.append(item('No posts', 'muted'));
+                return;
+            }
+            posts.forEach(p => userPosts.append(kv(`Post ${p.id}`, p.title)));
+        }
+
+        function renderTodos(todos) {
+            userTodos.innerHTML = '';
+            userTodos.append(item('Todos'));
+            if (!Array.isArray(todos) || todos.length === 0) {
+                userTodos.append(item('No todos', 'muted'));
+                return;
+            }
+            todos.forEach(t => userTodos.append(kv(`Todo ${t.id}`, `${t.title} (completed: ${t.completed})`)));
+        }
+
+        // small DOM helpers
+        function item(text, cls) {
+            const li = document.createElement('li');
+            li.textContent = text;
+            if (cls) li.className = cls;
+            return li;
+        }
+
+        function kv(k, v) {
+            const li = document.createElement('li');
+            li.textContent = `${k}: ${v ?? ''}`;
+            return li;
+        }
+
+        async function search() {
+            const id = input.value.trim();
+            status2El.textContent = '';
+            status2El.classList.remove('error');
+
+            if (!id) {
+                status2El.textContent = 'Please enter a user ID.';
+                return;
+            }
+
+            // UI: loading state
+            searchBtn.disabled = true;
+            searchBtn.textContent = 'Searching…';
+            status2El.textContent = 'Loading…';
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s
+
+            try {
+                const userUrl  = `${API}/users/${encodeURIComponent(id)}`;
+                const postsUrl = `${API}/posts?userId=${encodeURIComponent(id)}`;
+                const todosUrl = `${API}/todos?userId=${encodeURIComponent(id)}`;
+
+                // Run all requests together; each rejects independently
+                const [u, p, t] = await Promise.allSettled([
+                    getJson(userUrl,  { signal: controller.signal }),
+                    getJson(postsUrl, { signal: controller.signal }),
+                    getJson(todosUrl, { signal: controller.signal })
+                ]);
+
+                const user  = u.status === 'fulfilled' ? u.value : null;
+                const posts = p.status === 'fulfilled' ? p.value : [];
+                const todos = t.status === 'fulfilled' ? t.value : [];
+
+                // If user not found (JSONPlaceholder returns {}), show the required error
+                if (!user || !user.id) {
+                    status2El.textContent = 'User was not found. Please try another user ID';
+                    status2El.classList.add('error');
+                    input.value = '';               // clear input box
+                    renderUser(null);
+                    renderPosts([]);
+                    renderTodos([]);
+                    return;
+                }
+
+                // Success
+                renderUser(user);
+                renderPosts(posts);
+                renderTodos(todos);
+                status2El.textContent = `Showing data for user ${user.id}.`;
+            } catch (err) {
+                status2El.textContent = (err.name === 'AbortError')
+                    ? 'Request timed out.'
+                    : `Something went wrong: ${err.message}`;
+                status2El.classList.add('error');
+            } finally {
+                clearTimeout(timeoutId);
+                searchBtn.disabled = false;
+                searchBtn.textContent = 'Search';
+            }
+        }
+
+        searchBtn.addEventListener('click', search);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') search();
+        });
+
+        // Part 3: Delayed Search functionality
+        const delaySearchBtn = $('#delaySearchBtn');
+        const status3El = $('#status3');
+
+        async function delayedSearch() {
+            status3El.textContent = '';
+            status3El.classList.remove('error');
+
+            // UI: loading state
+            delaySearchBtn.disabled = true;
+            delaySearchBtn.textContent = 'Waiting...';
+            status3El.textContent = 'Loading...';
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s
+            const id = 1;
+
+            try {
+                const userUrl  = `${API}/users/${encodeURIComponent(id)}`;
+
+                const res = await fetch(userUrl, { signal: controller.signal });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const data = await res.json();
+
+                // If user not found (JSONPlaceholder returns {}), show the required error
+                if (!data || !data.id) {
+                    status3El.textContent = 'User was not found. Please try another user ID';
+                    status3El.classList.add('error');
+                    return;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                console.log(data);
+                status3El.textContent = `Check console for the data`;
+            } catch (err) {
+                status3El.textContent = (err.name === 'AbortError')
+                    ? 'Request timed out.'
+                    : `Something went wrong: ${err.message}`;
+                status3El.classList.add('error');
+            } finally {
+                clearTimeout(timeoutId);
+                delaySearchBtn.disabled = false;
+                delaySearchBtn.textContent = 'Send Delayed Request';
+            }
+        }
+
+        delaySearchBtn.addEventListener('click', delayedSearch);
+    </script>
+</body>
+</html>
