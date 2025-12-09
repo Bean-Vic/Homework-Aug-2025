@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        margin-top: 40px;
+        background: #eee;
+      }
+      #head {
+        height: 150px;
+        margin-bottom: 0px;
+        margin-top: 5%;
+        background-color: rgb(146, 200, 29);
+      }
+      .wrapper {
+        display: grid;
+        grid-template-columns: 20% 60% 20%;
+        grid-template-areas:
+          "header header header"
+          "nav article aside"
+          "footer footer footer";
+        width: 80%; /* 宽度占整个页面的 80% */
+        margin: 0 auto; /* 自动左右外边距 → 居中 */
+      }
+
+      .nav,
+      .aside {
+        background-color: antiquewhite;
+        height: 450px;
+      }
+
+      .footer {
+        background-color: yellow;
+        height: 100px;
+      }
+      .header {
+        grid-area: header;
+        background-color: #9acd32;
+      }
+      .nav {
+        grid-area: nav;
+      }
+      .article {
+        grid-area: article;
+        background-color: white;
+      }
+      .aside {
+        grid-area: aside;
+      }
+      .footer {
+        grid-area: footer;
+      }
+      header,
+      nav,
+      article,
+      aside,
+      footer {
+        padding: 20px;
+        font-size: 20px;
+        font-weight: 500;
+        color: grey;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header id="head" class="box header">Header</header>
+      <nav class="box nav">Nav</nav>
+      <article class="box article">Article</article>
+      <aside class="box aside">Aside</aside>
+      <footer class="box footer">Footer</footer>
+    </div>
+  </body>
+</html>
