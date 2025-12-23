@@ -1,0 +1,63 @@
+<h2>Part 2: Search User by ID</h2>
+<input type="number" id="userIdInput" placeholder="Enter User ID" />
+<button id="searchBtn">Search</button>
+<div id="userResult"></div>
+<script>
+  const API_BASE = "https://jsonplaceholder.typicode.com";
+
+  document.getElementById("searchBtn").addEventListener("click", async () => {
+    // 在函数前加上 async，这个函数就会自动返回一个 Promise。
+    // 更重要的是：在 async 函数里面可以用 await。
+    // 为什么要写 async？
+    // 因为我们要用 fetch 去请求 API，而 fetch 返回的是 Promise。
+    // 如果不用 async/await，你得写很多 .then()，代码会比较难读。
+    // 用 async/await 就可以像「同步代码」那样写，逻辑更清晰。
+    const userIdInput = document.getElementById("userIdInput");
+    const id = userIdInput.value.trim();
+    if (!id) return;
+    const resultDiv = document.getElementById("userResult");
+    resultDiv.innerHTML = "Loading...";
+
+    try {
+      const [userRes, postsRes, todosRes] = await Promise.all([
+        fetch(`${API_BASE}/users/${id}`), //是一个 Promise
+        fetch(`${API_BASE}/posts?userId=${id}`), //是一个 Promise
+        fetch(`${API_BASE}/todos?userId=${id}`),
+      ]);
+
+      if (!userRes.ok) throw new Error("User fetch failed");
+
+      const user = await userRes.json();
+      const posts = await postsRes.json();
+      const todos = await todosRes.json();
+
+      // 如果 user 对象是空对象，说明没找到
+      if (!user.id) {
+        throw new Error("User not found");
+      }
+
+      let html = `<h3>User Info</h3><ul>`;
+      for (const key in user) {
+        html += `<li>${key}: ${user[key]}</li>`;
+      }
+      html += "</ul>";
+
+      html += `<h3>Posts</h3><ul>`;
+      posts.forEach((p) => {
+        html += `<li>${p.id}: ${p.title}</li>`;
+      });
+      html += "</ul>";
+
+      html += `<h3>Todos</h3><ul>`;
+      todos.forEach((t) => {
+        html += `<li>${t.id}: ${t.title} - ${t.completed}</li>`;
+      });
+      html += "</ul>";
+
+      resultDiv.innerHTML = html;
+    } catch (err) {
+      resultDiv.innerHTML = `<p style="color:red;">User was not found. Please try another user ID.</p>`;
+      userIdInput.value = "";
+    }
+  });
+</script>

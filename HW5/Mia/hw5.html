@@ -1,0 +1,94 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+
+<form>
+  <table>
+<thead>
+<tr>
+  <!-- table header -->
+<th>Product Name</th>
+<th>Product Category</th>
+<th>Product Price</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="task-list-item">
+<td>M & M </td>
+<td>Snacks</td>
+<td>$1.99 </td>
+<td><button class="task-list"> Delete</button></td>
+</tr>
+<tr class="task-list-item">
+<!-- table cell -->
+<td> Table </td>
+<td> Furniture</td>
+<td>$199 </td>
+<td><button class="task-list"> Delete</button></td></tr>
+
+<tr class="task-list-item">
+<td> kale </td>
+<td> Vegetables</td>
+<td>$2.49 </td>
+<td><button class="task-list"> Delete</button></td></tr>
+</tbody>
+
+</table>
+
+<div class="container">
+   <h1>Add Product</h1>
+   <div class="form">
+    <label>Product Name:<input id="name"></label>
+    <label>Product Category:<input id="category"></label>
+    <label>Product Price:<input id="price"></label>
+    <button id="add" type="button">Add New</button>
+
+   </div></form>
+   <script>
+  const tableBody = document.querySelector("tbody");
+
+    tableBody.addEventListener("click", (event) => {
+      if (event.target.tagName === "BUTTON") {
+        const row = event.target.closest(".task-list-item");
+        row?.remove();
+        //optional chaining on null
+      }
+    });
+    const $addBtn = document.getElementById("add");
+    const $nameInput = document.getElementById("name")
+    const $catInput = document.getElementById("category")
+    const $priceInput = document.getElementById("price")
+
+ // 添加新产品
+    $addBtn.addEventListener("click", () => {
+      const name = $nameInput.value.trim();
+      const category = $catInput.value.trim();
+      const price = $priceInput.value.trim();
+
+      if (!name || !category || !price) {
+        alert("Please fill in all fields!");
+        return;
+      }
+  let newRow = document.createElement("tr");
+      newRow.classList.add("task-list-item");
+      newRow.innerHTML = `
+        <td>${name}</td>
+        <td>${category}</td>
+        <td>$${price}</td>
+        <td><button type="button" class="task-list">Delete</button></td>
+      `;
+   tableBody.appendChild(newRow);})
+</script>
+
+</body>
+</html>
